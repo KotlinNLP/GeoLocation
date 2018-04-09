@@ -60,6 +60,7 @@
         <surfire.version>2.19.1</surfire.version>
         <dokka.version>0.9.13</dokka.version>
         <klaxon.version>2.1.14</klaxon.version>
+        <utils.version>1.0.0</utils.version>
     </properties>
 
     <repositories>
@@ -219,6 +220,12 @@
             <groupId>com.beust</groupId>
             <artifactId>klaxon</artifactId>
             <version>${klaxon.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.kotlinnlp</groupId>
+            <artifactId>utils</artifactId>
+            <version>${utils.version}</version>
         </dependency>
     </dependencies>
 
