@@ -33,7 +33,8 @@ continent     region
           |
          city
 ```
-Note: as shown in the graph, the `admin_area_1` and the `admin_area_2` are optional in the hierarchy of a lower level location.
+Note: as shown in the graph, the `admin_area_1` and the `admin_area_2` are optional in the hierarchy of a lower level 
+location.
 
 ### Location properties
 
@@ -42,28 +43,42 @@ Each location is represented by a list with 21 elements, each representing a pro
 0.  `id`: String. The ID.
 1.  `iso-a2`: String, nullable. Defined only for type 'country'. The ISO 3166-1 alpha-2 code of the country.
 2.  `type` String. The hierarchy type.
-3.  `sub-type`: String, nullable. Defined only for some locations of type 'country', 'admin_area_2', 'admin_area_1' and 'city'. The sub-type.
+3.  `sub-type`: String, nullable. Defined only for some locations of type 'country', 'admin_area_2', 'admin_area_1' and 
+'city'. The sub-type.
 4.  `name`: String, nullable. The main name.
-5.  `name en`: String, nullable. Defined only for some locations of type 'country', 'admin_area_1' and 'city'. The English name.
-6.  `name it`: String, nullable. Defined only for some locations of type 'country', 'admin_area_1' and 'city'. The Italian name.
-7.  `name de`: String, nullable. Defined only for some locations of type 'country', 'admin_area_1' and 'city'. The German name.
-8.  `name es`: String, nullable. Defined only for some locations of type 'country', 'admin_area_1' and 'city'. The Spanish name.
-9.  `name fr`: String, nullable. Defined only for some locations of type 'country', 'admin_area_1' and 'city'. The French name.
-10. `name ar`: String, nullable. Defined only for some locations of type 'country', 'admin_area_1' and 'city'. The Arabic name.
-11. `other names`: nullable. Defined only for some locations of type 'country', 'admin_area_2' and 'admin_area_1'. A list of other names.
-12. `demonym`: String, nullable. Defined only for some locations of type 'country', 'admin_area_1'. Defined only 'West Bank' and 'Gaza Strip'). The demonym.
+5.  `name en`: String, nullable. Defined only for some locations of type 'country', 'admin_area_1' and 'city'. 
+The English name.
+6.  `name it`: String, nullable. Defined only for some locations of type 'country', 'admin_area_1' and 'city'. 
+The Italian name.
+7.  `name de`: String, nullable. Defined only for some locations of type 'country', 'admin_area_1' and 'city'. 
+The German name.
+8.  `name es`: String, nullable. Defined only for some locations of type 'country', 'admin_area_1' and 'city'. 
+The Spanish name.
+9.  `name fr`: String, nullable. Defined only for some locations of type 'country', 'admin_area_1' and 'city'. 
+The French name.
+10. `name ar`: String, nullable. Defined only for some locations of type 'country', 'admin_area_1' and 'city'. 
+The Arabic name.
+11. `other names`: nullable. Defined only for some locations of type 'country', 'admin_area_2' and 'admin_area_1'. 
+A list of other names.
+12. `demonym`: String, nullable. Defined only for some locations of type 'country', 'admin_area_1'. 
+Defined only 'West Bank' and 'Gaza Strip'). The demonym.
 13. `lat`: Int, null for type 'region'. The latitude coordinate.
 14. `lon`: Int, null for type 'region'. The longitude coordinate.
-15. `borders`: List of String, nullable. Defined only for some locations of type 'country'. It contains a list of the adjacent countries ids.
+15. `borders`: List of String, nullable. Defined only for some locations of type 'country'. 
+It contains a list of the adjacent countries ids.
 16. `is capital`: Boolean, nullable. Defined only for type 'city'. Whether a city is the capital of its country.
 17. `area`: Int, nullable. Defined only for type 'country'. The area of the country in km^2.
-18. `population`: Int, nullable. Defined only for some locations of type 'country', 'admin_area_1' and 'city'. The population.
-19. `languages`: List of String, nullable. Defined only for some locations of type 'country' and 'admin_area_1'. The ISO 639-1 codes of the languages spoken in the location.
-20. `context`: List of List, nullable. Defined only for some locations of type 'city'. It is a list of contexts, containing in turn `type` (String), `name` (String) and `level` (Int), in this order.
+18. `population`: Int, nullable. Defined only for some locations of type 'country', 'admin_area_1' and 'city'. 
+The population.
+19. `languages`: List of String, nullable. Defined only for some locations of type 'country' and 'admin_area_1'. 
+The ISO 639-1 codes of the languages spoken in the location.
+20. `contexts`: List of List, nullable. Defined only for some locations of type 'city'. 
+It is a list of contexts, containing in turn `type` (String), `name` (String) and `level` (Int), in this order.
 
 ### Location ID
 
-A string containing a number in hexadecimal format, composed by 6 sections, each representing a level of the locations hierarchy.
+A string containing a number in hexadecimal format, composed by 6 sections, each representing a level of the locations 
+hierarchy.
 
 An example:
 ```
@@ -81,7 +96,8 @@ Sections:
 5. Admin Area 1 (3 digits)
 6. City (4 digits)
 
-Note: in the example, the country related to that location has ID "52A3000000000" (it is enough to replace the sections of the lower levels with zeros).
+Note: in the example, the country related to that location has ID "52A3000000000" (it is enough to replace the sections 
+of the lower levels with zeros).
 
 ### Location sub-types
 
