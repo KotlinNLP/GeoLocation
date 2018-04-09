@@ -1,3 +1,6 @@
+### Locations large file ###
+src/main/resources/locations.jsonl
+
 ### Intellij ###
 .idea/
 /out/
