@@ -43,7 +43,7 @@ Each location is represented by a list with 20 elements, each representing a pro
 0.  `id`: String. The ID.
 1.  `iso-a2`: String, nullable. Defined only for type 'country'. The ISO 3166-1 alpha-2 code of the country.
 2.  `sub-type`: String, nullable. Defined only for some locations of type 'country', 'admin_area_2', 'admin_area_1' and 
-'city'. The sub-type (the type is deduced by the `id`).
+'city'. The sub-type (the type is deduced from the `id`).
 3.  `name`: String, nullable. The main name.
 4.  `name en`: String, nullable. Defined only for some locations of type 'country', 'admin_area_1' and 'city'. 
 The English name.
