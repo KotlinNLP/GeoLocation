@@ -81,4 +81,62 @@ data class Location(
    * @property level the hierarchic level (useful in case of more contexts)
    */
   data class Context(val type: String, val name: String, val level: Int)
+
+  /**
+   * The list of not null parent IDs, from the nearest in the hierarchy to the top (excluding the region).
+   */
+  val parentsIds: List<String> by lazy { listOfNotNull(this.adminArea1Id, this.adminArea2Id, this.continentId) }
+
+  /**
+   * The admin area 1 ID in which this location is (or null if it is not inside an admin area 1).
+   */
+  val adminArea1Id: String? by lazy {
+    if (this.isInsideAdminArea1) this.id.replaceRange(9 until 13, "0".repeat(4)) else null
+  }
+
+  /**
+   * The admin area 2 ID in which this location is (or null if it is not inside an admin area 2).
+   */
+  val adminArea2Id: String? by lazy {
+    if (this.isInsideAdminArea2) this.id.replaceRange(6 until 13, "0".repeat(7)) else null
+  }
+
+  /**
+   * The region ID in which this location is (or null if it is not inside a region).
+   */
+  val regionId: String? by lazy { if (this.isInsideRegion) "0" + this.id[1] + "0".repeat(11) else null }
+
+  /**
+   * The continent ID in which this location is (or null if it is not inside a continent).
+   */
+  val continentId: String? by lazy { if (this.isInsideContinent) this.id[0] + "0".repeat(12) else null }
+
+  /**
+   * Whether this location is inside a continent.
+   */
+  val isInsideContinent: Boolean by lazy { !this.allIdZeros(2 until 13) }
+
+  /**
+   * Whether this location is inside a region.
+   */
+  val isInsideRegion: Boolean by lazy { this.isInsideContinent }
+
+  /**
+   * Whether this location is inside an admin area 2.
+   */
+  val isInsideAdminArea2: Boolean by lazy { !this.allIdZeros(4 until 6) && !this.allIdZeros(6 until 13) }
+
+  /**
+   * Whether this location is inside an admin area 1.
+   */
+  val isInsideAdminArea1: Boolean by lazy { !this.allIdZeros(6 until 9) && !this.allIdZeros(9 until 13) }
+
+  /**
+   * Check if all the digits of the [id] in the given [range] are zeros.
+   *
+   * @param range a range of digits positions within the [id] length
+   *
+   * @return whether all the ID digits in the given range are zeros
+   */
+  private fun allIdZeros(range: IntRange): Boolean = range.all { i -> this.id[i] == '0' }
 }
