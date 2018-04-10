@@ -29,21 +29,21 @@ package com.kotlinnlp.geolocation
  */
 data class Location(
   val id: String,
-  val iso: String?,
+  val iso: String? = null,
   val type: String,
-  val subType: String?,
+  val subType: String? = null,
   val name: String,
-  val translations: Translations?,
-  val otherNames: List<String>?,
+  val translations: Translations? = null,
+  val otherNames: List<String>? = null,
   val labels: Set<String>,
-  val demonym: String?,
-  val coords: Coordinates?,
-  val borders: List<String>?,
-  val isCapital: Boolean?,
-  val area: Int?,
-  val population: Int?,
-  val languages: List<String>?,
-  val contexts: List<Context>?
+  val demonym: String? = null,
+  val coords: Coordinates? = null,
+  val borders: List<String>? = null,
+  val isCapital: Boolean? = null,
+  val area: Int? = null,
+  val population: Int? = null,
+  val languages: List<String>? = null,
+  val contexts: List<Context>? = null
 ) {
 
   /**
