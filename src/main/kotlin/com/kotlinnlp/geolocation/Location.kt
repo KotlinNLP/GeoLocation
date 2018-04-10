@@ -11,21 +11,21 @@ package com.kotlinnlp.geolocation
  * A location.
  *
  * @property id the unique location id
- * @property iso
- * @property type
- * @property subType
- * @property name
- * @property translations
- * @property otherNames
- * @property labels
- * @property demonym
- * @property coords
- * @property borders
- * @property isCapital
- * @property area
- * @property population
- * @property languages
- * @property contexts
+ * @property iso the ISO 3166-1 alpha-2 code of a country (can be null)
+ * @property type the type
+ * @property subType the sub-type (can be null)
+ * @property name the name
+ * @property translations a name translations object
+ * @property otherNames a list of other possible names (can be null)
+ * @property labels a set of all the labels (lower case) with which the location can be named
+ * @property demonym the demonym (can be null)
+ * @property coords the coordinates (can be null)
+ * @property borders a list of border countries (can be null)
+ * @property isCapital a boolean indicating if a city is the capital of its country (can be null)
+ * @property area the area in km^2 (can be null)
+ * @property population the population (can be null)
+ * @property languages a list of spoken languages (can be null)
+ * @property contexts a list of contexts (can be null)
  */
 data class Location(
   val id: String,
