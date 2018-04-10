@@ -60,15 +60,15 @@ internal object LocationBuilder {
     jsonParser.parse(StringBuilder(jsonLocation)) as JsonArray<*>
 
   /**
-   * Build the labels list of a location, given the list of its properties.
+   * Build the set of labels of a location, given the list of its properties.
    *
    * @param properties the list of location properties
    *
-   * @return a list of labels
+   * @return a set of labels
    */
-  private fun buildLabels(properties: List<*>): List<String> {
+  private fun buildLabels(properties: List<*>): Set<String> {
 
-    val labels: MutableList<String> = mutableListOf(properties[4]!!.toLowerString())
+    val labels: MutableSet<String> = mutableSetOf(properties[4]!!.toLowerString())
 
     properties[5]?.let { labels.add(it.toLowerString()) }
     properties[6]?.let { labels.add(it.toLowerString()) }

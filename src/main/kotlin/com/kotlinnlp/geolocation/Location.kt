@@ -35,7 +35,7 @@ data class Location(
   val name: String,
   val translations: Translations,
   val otherNames: List<String>?,
-  val labels: List<String>,
+  val labels: Set<String>,
   val demonym: String?,
   val coords: Coordinates?,
   val borders: List<String>?,
