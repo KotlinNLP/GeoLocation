@@ -86,16 +86,20 @@ internal object LocationBuilder {
    *
    * @param properties the list of location properties
    *
-   * @return a new translations object
+   * @return a new translations object or null if no translations are defined in the given [properties]
    */
-  private fun buildTranslations(properties: List<*>) = Location.Translations(
-    en = properties[5] as? String,
-    it = properties[6] as? String,
-    de = properties[7] as? String,
-    es = properties[8] as? String,
-    fr = properties[9] as? String,
-    ar = properties[10] as? String
-  )
+  private fun buildTranslations(properties: List<*>): Location.Translations? =
+    if (properties.subList(5, 11).any { it != null })
+      Location.Translations(
+        en = properties[5] as? String,
+        it = properties[6] as? String,
+        de = properties[7] as? String,
+        es = properties[8] as? String,
+        fr = properties[9] as? String,
+        ar = properties[10] as? String
+      )
+    else
+      null
 
   /**
    * Build the coordinates of a location given the list of its properties.

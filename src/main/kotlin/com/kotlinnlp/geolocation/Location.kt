@@ -15,7 +15,7 @@ package com.kotlinnlp.geolocation
  * @property type the type
  * @property subType the sub-type (can be null)
  * @property name the name
- * @property translations a name translations object
+ * @property translations a name translations object (can be null)
  * @property otherNames a list of other possible names (can be null)
  * @property labels a set of all the labels (lower case) with which the location can be named
  * @property demonym the demonym (can be null)
@@ -33,7 +33,7 @@ data class Location(
   val type: String,
   val subType: String?,
   val name: String,
-  val translations: Translations,
+  val translations: Translations?,
   val otherNames: List<String>?,
   val labels: Set<String>,
   val demonym: String?,
