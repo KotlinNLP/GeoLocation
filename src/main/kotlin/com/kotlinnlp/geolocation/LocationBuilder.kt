@@ -37,7 +37,6 @@ internal object LocationBuilder {
       name = it[4] as String,
       translations = buildTranslations(it),
       otherNames = it[11]?.toStringList(),
-      labels = buildLabels(it),
       demonym = it[12] as? String,
       coords = buildCoordinates(it),
       borders = it[15]?.toStringList(),
@@ -58,28 +57,6 @@ internal object LocationBuilder {
    */
   fun decodeProperties(jsonLocation: String): JsonArray<*> =
     jsonParser.parse(StringBuilder(jsonLocation)) as JsonArray<*>
-
-  /**
-   * Build the set of labels of a location, given the list of its properties.
-   *
-   * @param properties the list of location properties
-   *
-   * @return a set of labels
-   */
-  private fun buildLabels(properties: List<*>): Set<String> {
-
-    val labels: MutableSet<String> = mutableSetOf(properties[4]!!.toLowerString())
-
-    properties[5]?.let { labels.add(it.toLowerString()) }
-    properties[6]?.let { labels.add(it.toLowerString()) }
-    properties[7]?.let { labels.add(it.toLowerString()) }
-    properties[8]?.let { labels.add(it.toLowerString()) }
-    properties[9]?.let { labels.add(it.toLowerString()) }
-    properties[10]?.let { labels.add(it.toLowerString()) }
-    properties[11]?.let { labels.addAll(it.toStringList(lowerCase = true)) }
-
-    return labels
-  }
 
   /**
    * Build the name translations of a location given the list of its properties.
@@ -136,11 +113,4 @@ internal object LocationBuilder {
   private fun Any.toStringList(lowerCase: Boolean = false): List<String> = (this as List<*>).map {
     if (lowerCase) (it as String).toLowerCase() else (it as String)
   }
-
-  /**
-   * Cast any object into a [String] converting it to lower case.
-   *
-   * @return a string
-   */
-  private fun Any.toLowerString(): String = (this as String).toLowerCase()
 }

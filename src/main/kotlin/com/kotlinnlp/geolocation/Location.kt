@@ -17,7 +17,6 @@ package com.kotlinnlp.geolocation
  * @property name the name
  * @property translations a name translations object (can be null)
  * @property otherNames a list of other possible names (can be null)
- * @property labels a set of all the labels (lower case) with which the location can be named
  * @property demonym the demonym (can be null)
  * @property coords the coordinates (can be null)
  * @property borders a list of border countries (can be null)
@@ -35,7 +34,6 @@ data class Location(
   val name: String,
   val translations: Translations? = null,
   val otherNames: List<String>? = null,
-  val labels: Set<String>,
   val demonym: String? = null,
   val coords: Coordinates? = null,
   val borders: List<String>? = null,
@@ -63,7 +61,13 @@ data class Location(
     val de: String?,
     val es: String?,
     val fr: String?
-  )
+  ) {
+
+    /**
+     * The list of not null translations.
+     */
+    val list: List<String> by lazy { listOfNotNull(this.en, this.ar, this.it, this.de, this.es, this.fr) }
+  }
 
   /**
    * The coordinates.
@@ -81,6 +85,11 @@ data class Location(
    * @property level the hierarchic level (useful in case of more contexts)
    */
   data class Context(val type: String, val name: String, val level: Int)
+
+  /**
+   * A set of all the labels (lower case) with which the location can be named.
+   */
+  val labels: Set<String> by lazy { this.buildLabels() }
 
   /**
    * The list of not null parent IDs, from the nearest in the hierarchy to the top (excluding the region).
@@ -130,6 +139,28 @@ data class Location(
    * Whether this location is inside an admin area 1.
    */
   val isInsideAdminArea1: Boolean by lazy { !this.allIdZeros(6 until 9) && !this.allIdZeros(9 until 13) }
+
+  /**
+   * Build the set of labels of this location.
+   *
+   * @return a set of labels
+   */
+  private fun buildLabels(): Set<String> {
+
+    val labels: MutableSet<String> = mutableSetOf(this.name.toLowerString())
+
+    this.translations?.list?.forEach { labels.add(it.toLowerString()) }
+    this.otherNames?.forEach { labels.add(it.toLowerString()) }
+
+    return labels
+  }
+
+  /**
+   * Cast any object into a [String] converting it to lower case.
+   *
+   * @return a string
+   */
+  private fun Any.toLowerString(): String = (this as String).toLowerCase()
 
   /**
    * Check if all the digits of the [id] in the given [range] are zeros.
