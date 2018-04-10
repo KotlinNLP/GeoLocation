@@ -30,7 +30,7 @@ internal object LocationBuilder {
    */
   fun buildLocation(properties: String): Location = decodeProperties(properties).let {
     Location(
-      id = it[0] as String,
+      id = (it[0] as String).toUpperCase(),
       iso = it[1] as? String,
       type = it[2] as String,
       subType = it[3] as? String,
@@ -66,17 +66,17 @@ internal object LocationBuilder {
    *
    * @return a list of labels
    */
-  fun buildLabels(properties: List<*>): List<String> {
+  private fun buildLabels(properties: List<*>): List<String> {
 
-    val labels: MutableList<String> = mutableListOf(properties[4] as String)
+    val labels: MutableList<String> = mutableListOf(properties[4]!!.toLowerString())
 
-    properties[5]?.let { labels.add(it as String) }
-    properties[6]?.let { labels.add(it as String) }
-    properties[7]?.let { labels.add(it as String) }
-    properties[8]?.let { labels.add(it as String) }
-    properties[9]?.let { labels.add(it as String) }
-    properties[10]?.let { labels.add(it as String) }
-    properties[11]?.let { labels.addAll(it.toStringList()) }
+    properties[5]?.let { labels.add(it.toLowerString()) }
+    properties[6]?.let { labels.add(it.toLowerString()) }
+    properties[7]?.let { labels.add(it.toLowerString()) }
+    properties[8]?.let { labels.add(it.toLowerString()) }
+    properties[9]?.let { labels.add(it.toLowerString()) }
+    properties[10]?.let { labels.add(it.toLowerString()) }
+    properties[11]?.let { labels.addAll(it.toStringList(lowerCase = true)) }
 
     return labels
   }
@@ -125,7 +125,18 @@ internal object LocationBuilder {
   /**
    * Cast any object into a list of [String].
    *
+   * @param lowerCase whether to convert each string to lower case (default false)
+   *
    * @return a list of strings
    */
-  private fun Any.toStringList() = (this as List<*>).map { it as String }
+  private fun Any.toStringList(lowerCase: Boolean = false): List<String> = (this as List<*>).map {
+    if (lowerCase) (it as String).toLowerCase() else (it as String)
+  }
+
+  /**
+   * Cast any object into a [String] converting it to lower case.
+   *
+   * @return a string
+   */
+  private fun Any.toLowerString(): String = (this as String).toLowerCase()
 }
