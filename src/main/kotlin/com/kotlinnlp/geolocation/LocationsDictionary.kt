@@ -45,19 +45,14 @@ class LocationsDictionary {
   }
 
   /**
-   * The list of encoded locations.
+   * The locations associated by id.
    */
-  private val encodedLocations = mutableListOf<String>()
+  private val encodedLocationsById = mutableMapOf<String, Location>()
 
   /**
-   * The encoded locations indices associated by id.
+   * The sets of locations associated by label.
    */
-  private val encodedLocationsById = mutableMapOf<String, Int>()
-
-  /**
-   * The sets of encoded locations indices associated by label.
-   */
-  private val encodedLocationsByLabel = mutableMapOf<String, MutableSet<Int>>()
+  private val encodedLocationsByLabel = mutableMapOf<String, MutableSet<Location>>()
 
   /**
    * Get a location by id.
@@ -66,9 +61,7 @@ class LocationsDictionary {
    *
    * @return the location with the given [id] or null if no one has been found
    */
-  operator fun get(id: String): Location? = this.encodedLocationsById[id.toUpperCase()]?.let {
-    LocationBuilder.buildLocation(this.encodedLocations[it])
-  }
+  operator fun get(id: String): Location? = this.encodedLocationsById[id.toUpperCase()]
 
   /**
    * Get all the locations with the given [label].
@@ -77,9 +70,7 @@ class LocationsDictionary {
    *
    * @return the locations with the given [label] or null if no one has been found
    */
-  fun getByLabel(label: String): List<Location>? = this.encodedLocationsByLabel[label.toLowerCase()]?.let { locations ->
-    locations.map { LocationBuilder.buildLocation(this.encodedLocations[it]) }
-  }
+  fun getByLabel(label: String): List<Location>? = this.encodedLocationsByLabel[label.toLowerCase()]?.toList()
 
   /**
    * Add an entry to the dictionary, given the JSON string containing the encoded properties of a location.
@@ -93,13 +84,13 @@ class LocationsDictionary {
       // ensure that the sub-type is valid and the name is not null
       if (properties[3] !in INVALID_SUB_TYPES && properties[4] != null) {
 
-        val id = (properties[0] as String).toUpperCase()
-        val index: Int = this.encodedLocations.size
-        val labels: List<String> = LocationBuilder.buildLabels(properties)
+        val location: Location = LocationBuilder.buildLocation(jsonLocation)
 
-        this.encodedLocations.add(jsonLocation)
-        this.encodedLocationsById[id] = index
-        labels.forEach { this.encodedLocationsByLabel.getOrPut(it.toLowerCase()) { mutableSetOf() }.add(index) }
+        this.encodedLocationsById[location.id] = location
+
+        location.labels.forEach {
+          this.encodedLocationsByLabel.getOrPut(it.toLowerCase()) { mutableSetOf() }.add(location)
+        }
       }
     }
   }
