@@ -82,7 +82,7 @@ class LocationsDictionary {
     LocationBuilder.decodeProperties(jsonLocation).let { properties ->
 
       // ensure that the sub-type is valid and the name is not null
-      if (properties[3] !in INVALID_SUB_TYPES && properties[4] != null) {
+      if (properties[2] !in INVALID_SUB_TYPES && properties[3] != null) {
 
         val location: Location = LocationBuilder.buildLocation(jsonLocation)
 
