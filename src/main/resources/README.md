@@ -77,8 +77,8 @@ It is a list of contexts, containing in turn `type` (String), `name` (String) an
 
 ### Location ID
 
-A string containing a number in hexadecimal format, composed by 6 sections, each representing a level of the locations 
-hierarchy.
+A string containing a number in hexadecimal format, composed by 13 digits divided in 6 groups, each representing a 
+level of the locations hierarchy.
 
 An example:
 ```
@@ -88,7 +88,7 @@ An example:
 
 ```
 
-Sections:
+Groups:
 1. Continent (1 digit)
 2. Region (1 digit)
 3. Country (2 digits)
