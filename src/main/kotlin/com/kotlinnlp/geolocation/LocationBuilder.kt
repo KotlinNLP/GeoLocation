@@ -32,19 +32,18 @@ internal object LocationBuilder {
     Location(
       id = (it[0] as String).toUpperCase(),
       iso = it[1] as? String,
-      type = it[2] as String,
-      subType = it[3] as? String,
-      name = it[4] as String,
+      subType = it[2] as? String,
+      name = it[3] as String,
       translations = buildTranslations(it),
-      otherNames = it[11]?.toStringList(),
-      demonym = it[12] as? String,
+      otherNames = it[10]?.toStringList(),
+      demonym = it[11] as? String,
       coords = buildCoordinates(it),
-      borders = it[15]?.toStringList(),
-      isCapital = it[16] as? Boolean,
-      area = it[17] as? Int,
-      population = it[18] as? Int,
-      languages = it[19]?.toStringList(),
-      contexts = it[20]?.let { buildContexts(it as List<*>) }
+      borders = it[14]?.toStringList(),
+      isCapital = it[15] as? Boolean,
+      area = it[16] as? Int,
+      population = it[17] as? Int,
+      languages = it[18]?.toStringList(),
+      contexts = it[19]?.let { buildContexts(it as List<*>) }
     )
   }
 
@@ -66,14 +65,14 @@ internal object LocationBuilder {
    * @return a new translations object or null if no translations are defined in the given [properties]
    */
   private fun buildTranslations(properties: List<*>): Location.Translations? =
-    if (properties.subList(5, 11).any { it != null })
+    if (properties.subList(4, 10).any { it != null })
       Location.Translations(
-        en = properties[5] as? String,
-        it = properties[6] as? String,
-        de = properties[7] as? String,
-        es = properties[8] as? String,
-        fr = properties[9] as? String,
-        ar = properties[10] as? String
+        en = properties[4] as? String,
+        it = properties[5] as? String,
+        de = properties[6] as? String,
+        es = properties[7] as? String,
+        fr = properties[8] as? String,
+        ar = properties[9] as? String
       )
     else
       null
@@ -86,9 +85,9 @@ internal object LocationBuilder {
    * @return a new coordinates object or null if no coordinates are defined in the given [properties]
    */
   private fun buildCoordinates(properties: List<*>): Location.Coordinates? =
-    properties[13]?.let {
-      require(properties[14] != null) { "Invalid format: if 'lat' is not null also 'lon' must be not null." }
-      Location.Coordinates(lat = it as Double, lon = properties[14] as Double)
+    properties[12]?.let {
+      require(properties[13] != null) { "Invalid format: if 'lat' is not null also 'lon' must be not null." }
+      Location.Coordinates(lat = it as Double, lon = properties[13] as Double)
     }
 
   /**

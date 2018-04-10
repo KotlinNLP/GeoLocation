@@ -12,7 +12,6 @@ package com.kotlinnlp.geolocation
  *
  * @property id the unique location id
  * @property iso the ISO 3166-1 alpha-2 code of a country (can be null)
- * @property type the type
  * @property subType the sub-type (can be null)
  * @property name the name
  * @property translations a name translations object (can be null)
@@ -29,7 +28,6 @@ package com.kotlinnlp.geolocation
 data class Location(
   val id: String,
   val iso: String? = null,
-  val type: String,
   val subType: String? = null,
   val name: String,
   val translations: Translations? = null,
@@ -43,6 +41,11 @@ data class Location(
   val languages: List<String>? = null,
   val contexts: List<Context>? = null
 ) {
+
+  /**
+   * The location type.
+   */
+  enum class Type { City, AdminArea1, AdminArea2, Country, Region, Continent }
 
   /**
    * The [name] translations.
@@ -87,6 +90,11 @@ data class Location(
   data class Context(val type: String, val name: String, val level: Int)
 
   /**
+   * The location type.
+   */
+  val type: Type by lazy { this.buildType() }
+
+  /**
    * A set of all the labels (lower case) with which the location can be named.
    */
   val labels: Set<String> by lazy { this.buildLabels() }
@@ -123,7 +131,7 @@ data class Location(
   /**
    * Whether this location is inside a continent.
    */
-  val isInsideContinent: Boolean by lazy { !this.allIdZeros(2 until 13) }
+  val isInsideContinent: Boolean by lazy { this.type !in setOf(Type.Continent, Type.Region) }
 
   /**
    * Whether this location is inside a region.
@@ -133,12 +141,28 @@ data class Location(
   /**
    * Whether this location is inside an admin area 2.
    */
-  val isInsideAdminArea2: Boolean by lazy { !this.allIdZeros(4 until 6) && !this.allIdZeros(6 until 13) }
+  val isInsideAdminArea2: Boolean by lazy {
+    this.type in setOf(Type.City, Type.AdminArea1) && !this.allIdZeros(4 until 6)
+  }
 
   /**
    * Whether this location is inside an admin area 1.
    */
-  val isInsideAdminArea1: Boolean by lazy { !this.allIdZeros(6 until 9) && !this.allIdZeros(9 until 13) }
+  val isInsideAdminArea1: Boolean by lazy { this.type == Type.City && !this.allIdZeros(6 until 9) }
+
+  /**
+   * Build the type of this location deducing it from the [id].
+   *
+   * @return the location type
+   */
+  private fun buildType(): Type = when {
+    this.allIdZeros(1 until 13) -> Type.Continent
+    this.allIdZeros(2 until 13) -> Type.Region
+    this.allIdZeros(4 until 13) -> Type.Country
+    this.allIdZeros(6 until 13) -> Type.AdminArea2
+    this.allIdZeros(9 until 13) -> Type.AdminArea1
+    else -> Type.City
+  }
 
   /**
    * Build the set of labels of this location.
