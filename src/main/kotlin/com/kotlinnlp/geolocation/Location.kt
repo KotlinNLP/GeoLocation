@@ -119,6 +119,13 @@ data class Location(
   }
 
   /**
+   * The country ID in which this location is (or null if it is not inside a country).
+   */
+  val countryId: String? by lazy {
+    if (this.isInsideCountry) this.id.replaceRange(4 until 13, "0".repeat(9)) else null
+  }
+
+  /**
    * The region ID in which this location is (or null if it is not inside a region).
    */
   val regionId: String? by lazy { if (this.isInsideRegion) "0" + this.id[1] + "0".repeat(11) else null }
@@ -137,6 +144,11 @@ data class Location(
    * Whether this location is inside a region.
    */
   val isInsideRegion: Boolean by lazy { this.isInsideContinent }
+
+  /**
+   * Whether this location is inside a country.
+   */
+  val isInsideCountry: Boolean by lazy { this.isInsideContinent && this.type != Type.Country }
 
   /**
    * Whether this location is inside an admin area 2.
