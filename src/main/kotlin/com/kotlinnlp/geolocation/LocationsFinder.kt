@@ -35,17 +35,17 @@ class LocationsFinder(
   data class CandidateEntity(val name: String, val score: Double) {
 
     /**
-     * The [name] lower case.
+     * The normalized [name].
      */
-    val lowerName: String = name.toLowerCase()
+    val normName: String = this.name.trim().toLowerCase()
 
     /**
-     * @return the hash code for this class, based on the [lowerName]
+     * @return the hash code for this class, based on the [normName]
      */
-    override fun hashCode(): Int = this.lowerName.hashCode()
+    override fun hashCode(): Int = this.normName.hashCode()
 
     /**
-     * Compare this object to another by [lowerName].
+     * Compare this object to another by [normName].
      *
      * @param other any object
      *
@@ -56,7 +56,7 @@ class LocationsFinder(
       if (this === other) return true
       if (javaClass != other?.javaClass) return false
 
-      if (lowerName != (other as CandidateEntity).lowerName) return false
+      if (normName != (other as CandidateEntity).normName) return false
 
       return true
     }
