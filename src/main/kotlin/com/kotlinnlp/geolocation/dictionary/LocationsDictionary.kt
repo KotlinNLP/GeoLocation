@@ -65,6 +65,17 @@ class LocationsDictionary {
   operator fun get(id: String): Location? = this.encodedLocationsById[id.toUpperCase()]
 
   /**
+   * Force to get a location by id.
+   *
+   * @param id the id of a location
+   *
+   * @throws KotlinNullPointerException if no location has been found
+   *
+   * @return the location with the given [id]
+   */
+  fun getValue(id: String): Location = this[id]!!
+
+  /**
    * Get all the locations with the given [label].
    *
    * @param label a label of a location
