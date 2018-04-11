@@ -34,7 +34,7 @@ class LocationsFinder(
   /**
    * The current candidate locations.
    */
-  private lateinit var currentCandidates: List<ExtendedLocation>
+  private lateinit var candidateLocations: List<ExtendedLocation>
 
   /**
    * The set of location ids of the current candidates.
@@ -82,11 +82,11 @@ class LocationsFinder(
       locations ?: listOf()
     }
 
-    this.currentCandidates = candidateLocations.distinctBy { it.id }.map {
+    this.candidateLocations = candidateLocations.distinctBy { it.id }.map {
       this.buildExtendedLocation(location = it, entities = entitiesNamesByLocId.getValue(it.id))
     }
 
-    this.locationIds = this.currentCandidates.map { it.location.id }
+    this.locationIds = this.candidateLocations.map { it.location.id }
   }
 
   /**
@@ -111,7 +111,7 @@ class LocationsFinder(
   private fun setAddingEntities() {
 
     val addingLocationIds: Set<String> =
-      this.currentCandidates.flatMap { it.location.parentsIds }.subtract(this.locationIds)
+      this.candidateLocations.flatMap { it.location.parentsIds }.subtract(this.locationIds)
 
     this.addingEntities = addingLocationIds.flatMap { id -> this.dictionary.getValue(id).labels }.toSet()
   }
@@ -121,7 +121,7 @@ class LocationsFinder(
    */
   private fun setScores() {
 
-    this.currentCandidates.forEach {
+    this.candidateLocations.forEach {
       this.setScoreByParents(it)
     }
   }
