@@ -29,26 +29,48 @@ class LocationsFinder(
   /**
    * A candidate location to give as input.
    *
-   * @property id an ID (unique within the input list of candidates)
-   * @property name the name of the candidate entity
+   * @property name the name of the entity
    * @property score the semantic score (as confidence that the candidate could be a location)
    */
-  data class Candidate(val id: Int, val name: String, val score: Double)
+  data class CandidateEntity(val name: String, val score: Double) {
+
+    /**
+     * The [name] lower case.
+     */
+    val lowerName: String = name.toLowerCase()
+
+    /**
+     * @return the hash code for this class, based on the [lowerName]
+     */
+    override fun hashCode(): Int = this.lowerName.hashCode()
+
+    /**
+     * Compare this object to another by [lowerName].
+     *
+     * @param other any object
+     *
+     * @return whether this object is equal to another
+     */
+    override fun equals(other: Any?): Boolean {
+
+      if (this === other) return true
+      if (javaClass != other?.javaClass) return false
+
+      if (lowerName != (other as CandidateEntity).lowerName) return false
+
+      return true
+    }
+  }
 
   /**
-   * Get the valid locations within a given list of candidates.
+   * Get the valid locations within a given list of candidate entities.
    *
-   * @param candidates the entities found in a text, candidate as locations
+   * @param candidateEntities a set of entities found in a text, candidate as locations
    *
-   * @return a list with the same length of the given [candidates], containing at each position the related location
+   * @return a list with the same length of the given [candidateEntities], containing at each position the related location
    *         if one has been found, otherwise null
    */
-  fun getLocations(candidates: List<Candidate>): List<Location?> {
-
-    require(candidates.map { it.id }.toSet().size == candidates.size) {
-      "Candidate locations must all have different IDs."
-    }
-
+  fun getLocations(candidateEntities: Set<CandidateEntity>): List<Location?> {
     TODO()
   }
 }
