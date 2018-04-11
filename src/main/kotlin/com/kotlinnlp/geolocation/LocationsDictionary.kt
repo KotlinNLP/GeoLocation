@@ -7,6 +7,7 @@
 
 package com.kotlinnlp.geolocation
 
+import com.kotlinnlp.geolocation.structures.Location
 import com.kotlinnlp.progressindicator.ProgressIndicatorBar
 import com.kotlinnlp.utils.forEachLine
 import com.kotlinnlp.utils.getLinesCount

@@ -9,6 +9,7 @@ package com.kotlinnlp.geolocation
 
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.Parser
+import com.kotlinnlp.geolocation.structures.Location
 
 /**
  * A helper to build a location encoded in JSON format.
