@@ -27,11 +27,15 @@ data class ExtendedLocation(
   /**
    * A structure containing the boosts for the [score].
    *
-   * @property children the score boost related to the [location] children
-   * @property parents the score boost related to the [location] parents
-   * @property brothers the score boost related to the [location] brothers
+   * @property children a map of score boosts associated by child entity
+   * @property parents a map of score boosts associated by parent entity
+   * @property brothers a map of score boosts associated by brother entity
    */
-  data class Boost(var children: Double = 0.0, var parents: Double = 0.0, var brothers: Double = 0.0)
+  data class Boost(
+    var children: MutableMap<String, Double> = mutableMapOf(),
+    var parents: MutableMap<String, Double> = mutableMapOf(),
+    var brothers: MutableMap<String, Double> = mutableMapOf()
+  )
 
   /**
    * The location score.
