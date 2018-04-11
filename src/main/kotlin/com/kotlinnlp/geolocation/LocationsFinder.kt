@@ -57,6 +57,7 @@ class LocationsFinder(
   fun getLocations(candidateEntities: Set<CandidateEntity>): List<Location?> {
 
     this.setCandidateLocations(candidateEntities)
+    // TODO: add this.solveAmbiguities()
     this.setAddingEntities()
     this.setScores()
 
