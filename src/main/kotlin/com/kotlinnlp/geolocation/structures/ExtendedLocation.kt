@@ -46,6 +46,8 @@ data class ExtendedLocation(
    */
   fun boostByParent(parent: Location) {
 
+    require(parent.id in this.location.parentsIds) { "Invalid parent." }
+
     if (this.parentIsInfluential(parent)) {
       TODO()
     }
