@@ -32,14 +32,9 @@ class LocationsFinder(
   }
 
   /**
-   * The current candidate locations.
+   * The map of current candidate locations associated by id.
    */
-  private lateinit var candidateLocations: List<ExtendedLocation>
-
-  /**
-   * The set of location ids of the current candidates.
-   */
-  private lateinit var locationIds: List<String>
+  private lateinit var candidateLocationsMap: Map<String, ExtendedLocation>
 
   /**
    * A set of adding entities (taken from the parents labels) that could be mentioned in the text.
@@ -82,11 +77,9 @@ class LocationsFinder(
       locations ?: listOf()
     }
 
-    this.candidateLocations = candidateLocations.distinctBy { it.id }.map {
-      this.buildExtendedLocation(location = it, entities = entitiesNamesByLocId.getValue(it.id))
+    this.candidateLocationsMap = candidateLocations.distinctBy { it.id }.associate {
+      it.id to this.buildExtendedLocation(location = it, entities = entitiesNamesByLocId.getValue(it.id))
     }
-
-    this.locationIds = this.candidateLocations.map { it.location.id }
   }
 
   /**
@@ -111,7 +104,7 @@ class LocationsFinder(
   private fun setAddingEntities() {
 
     val addingLocationIds: Set<String> =
-      this.candidateLocations.flatMap { it.location.parentsIds }.subtract(this.locationIds)
+      this.candidateLocationsMap.let { it.values.flatMap { it.location.parentsIds }.subtract(it.keys) }
 
     this.addingEntities = addingLocationIds.flatMap { id -> this.dictionary.getValue(id).labels }.toSet()
   }
@@ -121,7 +114,7 @@ class LocationsFinder(
    */
   private fun setScores() {
 
-    this.candidateLocations.forEach {
+    this.candidateLocationsMap.values.forEach {
       this.setScoreByParents(it)
     }
   }
@@ -135,14 +128,7 @@ class LocationsFinder(
 
     location.parents.forEach { parent ->
 
-      if (parent.id in this.locationIds) {
-
-        location.boostByParent(parent)
-
-      } else {
-
-        // location.scoreByAddingEntities()
-      }
+      this.candidateLocationsMap[parent.id]?.let { location.boostByParent(it) } // ?: location.scoreByAddingEntities()
     }
   }
 }
