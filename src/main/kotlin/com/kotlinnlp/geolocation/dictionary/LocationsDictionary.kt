@@ -8,6 +8,7 @@
 package com.kotlinnlp.geolocation.dictionary
 
 import com.kotlinnlp.geolocation.structures.Location
+import com.kotlinnlp.geolocation.exceptions.LocationNotFound
 import com.kotlinnlp.progressindicator.ProgressIndicatorBar
 import com.kotlinnlp.utils.forEachLine
 import com.kotlinnlp.utils.getLinesCount
@@ -69,11 +70,11 @@ class LocationsDictionary {
    *
    * @param id the id of a location
    *
-   * @throws KotlinNullPointerException if no location has been found
+   * @throws LocationNotFound if no location has been found
    *
    * @return the location with the given [id]
    */
-  fun getValue(id: String): Location = this[id]!!
+  fun getValue(id: String): Location = this[id] ?: throw LocationNotFound(id)
 
   /**
    * Get all the locations with the given [label].
