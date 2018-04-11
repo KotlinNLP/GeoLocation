@@ -7,6 +7,7 @@
 
 package com.kotlinnlp.geolocation
 
+import com.kotlinnlp.geolocation.dictionary.LocationsDictionary
 import com.kotlinnlp.geolocation.structures.CandidateEntity
 import com.kotlinnlp.geolocation.structures.Location
 

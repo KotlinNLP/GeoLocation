@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.geolocation
+package com.kotlinnlp.geolocation.dictionary
 
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.Parser
