@@ -102,7 +102,9 @@ data class Location(
   /**
    * The list of not null parent IDs, from the nearest in the hierarchy to the top (excluding the region).
    */
-  val parentsIds: List<String> by lazy { listOfNotNull(this.adminArea1Id, this.adminArea2Id, this.continentId) }
+  val parentsIds: List<String> by lazy {
+    listOfNotNull(this.adminArea1Id, this.adminArea2Id, this.countryId, this.continentId)
+  }
 
   /**
    * The admin area 1 ID in which this location is (or null if it is not inside an admin area 1).
