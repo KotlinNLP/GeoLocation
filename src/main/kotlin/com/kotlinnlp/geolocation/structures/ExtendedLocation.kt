@@ -46,13 +46,13 @@ data class ExtendedLocation(
   /**
    * Boost the [score] by a given parent.
    *
-   * @param parent a parent location of [location]
+   * @param parent the extended location of a parent of [location]
    */
-  fun boostByParent(parent: Location) {
+  fun boostByParent(parent: ExtendedLocation) {
 
-    require(parent.id in this.location.parentsIds) { "Invalid parent." }
+    require(parent.location.id in this.location.parentsIds) { "Invalid parent." }
 
-    if (this.parentIsInfluential(parent)) {
+    if (this.parentIsInfluential(parent.location)) {
       TODO()
     }
   }
