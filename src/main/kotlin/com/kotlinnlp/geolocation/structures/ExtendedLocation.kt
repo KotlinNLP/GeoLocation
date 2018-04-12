@@ -69,36 +69,18 @@ data class ExtendedLocation(
 
     if (this.parentIsInfluential(parent.location)) {
 
-      var locationScoreBoost = 0.0
-      var parentScoreBoost = 0.0
       val entitiesInters: Set<String> = this.entitiesNames.intersect(parent.entitiesNames)
 
-      parent.entitiesNames.subtract(entitiesInters).forEach {
+      this.boostScore(
+        entitiesEntries = parent.getEntitiesEntries(exceptNames = entitiesInters),
+        boostMap = this.boost.parents,
+        boostMapRelative = this.boost.children)
 
-        var boost: Double = parent.getEntityScore(it)
-
-        this.boost.parents[it] = boost
-
-        // If the entity already boosted this location as child, mediates the boosts
-        this.boost.children[it]?.let { childBoost -> boost = (boost + childBoost) / 2 }
-
-        locationScoreBoost = max(locationScoreBoost, boost)
-      }
-
-      this.entitiesNames.subtract(entitiesInters).forEach {
-
-        var boost: Double = this.getEntityScore(it)
-
-        parent.boost.children[it] = boost
-
-        // If the entity already boosted the parent as parent, mediates the boosts
-        parent.boost.parents[it]?.let { parentBoost -> boost = (boost + parentBoost) / 2 }
-
-        parentScoreBoost = max(parentScoreBoost, boost)
-      }
-
-      this.score += locationScoreBoost
-      parent.score += parentScoreBoost / 2
+      parent.boostScore(
+        entitiesEntries = this.getEntitiesEntries(exceptNames = entitiesInters),
+        boostMap = this.boost.parents,
+        boostMapRelative = this.boost.children,
+        rateFactor = 0.5)
     }
   }
 
@@ -113,9 +95,44 @@ data class ExtendedLocation(
       (parent.type == Location.Type.Country && !this.location.isInsideAdminArea2)
 
   /**
-   * @param name the name of an entity that originated this location
+   * Get a list of <name, score> entities entries of this location.
    *
-   * @return the score associated to the entity with the given [name]
+   * @param exceptNames a set of entities names to be excluded from the response
+   *
+   * @return a list of <name, score> map entries
    */
-  private fun getEntityScore(name: String): Double = this.entitiesScoresMap.getValue(name)
+  private fun getEntitiesEntries(exceptNames: Set<String>): List<Map.Entry<String, Double>> {
+
+    val entitiesNames: Set<String> = this.entitiesNames.subtract(exceptNames)
+
+    return this.entitiesScoresMap.entries.filter { it.key in entitiesNames }
+  }
+
+  /**
+   * Boost the score of this location through the scores of given entities.
+   *
+   * @param entitiesEntries the <name, score> entities entries
+   * @param boostMap the boost map in which to save each entity boost
+   * @param boostMapRelative the boost map of relatives in which to check if an entity already boosted this location
+   * @param rateFactor a rate factor multiplied to the boost before applying it (default = 1.0)
+   */
+  private fun boostScore(entitiesEntries: List<Map.Entry<String, Double>>,
+                         boostMap: MutableMap<String, Double>,
+                         boostMapRelative: MutableMap<String, Double>,
+                         rateFactor: Double = 1.0) {
+
+    var finalBoost = 0.0
+
+    entitiesEntries.forEach { (name, score) ->
+
+      // If the entity already boosted this location as another relative, mediates the boosts
+      val boost: Double = boostMapRelative[name]?.let { (score + it) / 2 } ?: score
+
+      boostMap[name] = boost
+
+      finalBoost = max(finalBoost, boost)
+    }
+
+    this.score += rateFactor * finalBoost
+  }
 }
