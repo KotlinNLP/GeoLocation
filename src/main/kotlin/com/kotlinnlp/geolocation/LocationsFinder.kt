@@ -32,28 +32,38 @@ class LocationsFinder(
   }
 
   /**
+   * The input text.
+   */
+  private lateinit var inputText: String
+
+  /**
    * The map of current candidate locations associated by id.
    */
   private lateinit var candidateLocationsMap: Map<String, ExtendedLocation>
 
   /**
-   * A set of adding entities (taken from the parents labels) that could be mentioned in the text.
+   * A set of adding candidates (taken from the parents labels) that are mentioned in the text.
+   * All names are lower case.
    */
-  private lateinit var addingEntities: Set<String>
+  private lateinit var addingCandidates: Set<String>
 
   /**
    * Get the valid locations within a given list of candidate entities.
    *
+   * @param text the input text
    * @param candidateEntities a set of entities found in a text, candidate as locations
    *
    * @return a list with the same length of the given [candidateEntities], containing at each position the related location
    *         if one has been found, otherwise null
    */
-  fun getLocations(candidateEntities: Set<CandidateEntity>): List<Location?> {
+  fun getLocations(text: String, candidateEntities: Set<CandidateEntity>): List<Location?> {
 
+    this.inputText = text
     this.setCandidateLocations(candidateEntities)
+
     // TODO: add this.solveAmbiguities()
-    this.setAddingEntities()
+
+    this.setAddingCandidates()
     this.setScores()
 
     TODO()
@@ -99,15 +109,28 @@ class LocationsFinder(
   }
 
   /**
-   * Set the adding candidates that could be found in the text.
+   * Set the adding candidates found in the input text, starting from adding entities taken from the parents labels.
    */
-  private fun setAddingEntities() {
+  private fun setAddingCandidates() {
 
+    // A set of parent location ids that are not in the candidateLocationsMap.
     val addingLocationIds: Set<String> =
       this.candidateLocationsMap.let { it.values.flatMap { it.location.parentsIds }.subtract(it.keys) }
 
-    this.addingEntities = addingLocationIds.flatMap { id -> this.dictionary.getValue(id).labels }.toSet()
+    // A set of adding entities that could be mentioned in the text.
+    val addingEntities: Set<String> = addingLocationIds.flatMap { id -> this.dictionary.getValue(id).labels }.toSet()
+
+    this.addingCandidates = this.searchInText(entities = addingEntities)
   }
+
+  /**
+   * Search candidates in the input text that match a set of given entities.
+   *
+   * @param entities a set of entities
+   *
+   * @return a set of candidates lower names found in the input text
+   */
+  private fun searchInText(entities: Set<String>): Set<String> = setOf() // TODO: implement
 
   /**
    * Set the current candidates scores.
@@ -128,7 +151,8 @@ class LocationsFinder(
 
     location.parents.forEach { parent ->
 
-      this.candidateLocationsMap[parent.id]?.let { location.boostByParent(it) } // ?: location.scoreByAddingEntities()
+      this.candidateLocationsMap[parent.id]?.let { location.boostByParent(it) } ?:
+        location.boostByParentLabels(parent = parent, candidateNames = this.addingCandidates, rateFactor = 0.5)
     }
   }
 }
