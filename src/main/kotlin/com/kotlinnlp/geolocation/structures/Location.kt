@@ -100,6 +100,41 @@ data class Location(
   val labels: Set<String> by lazy { this.buildLabels() }
 
   /**
+   * Whether this location is a City.
+   */
+  val isCity: Boolean by lazy { this.type == Type.City }
+
+  /**
+   * Whether this location is a great City (sub-type = "city").
+   */
+  val isGreatCity: Boolean by lazy { this.type == Type.City && this.subType == "city" }
+
+  /**
+   * Whether this location is an Admin Area 1.
+   */
+  val isAdminArea1: Boolean by lazy { this.type == Type.AdminArea1 }
+
+  /**
+   * Whether this location is an Admin Area 2.
+   */
+  val isAdminArea2: Boolean by lazy { this.type == Type.AdminArea2 }
+
+  /**
+   * Whether this location is a Country.
+   */
+  val isCountry: Boolean by lazy { this.type == Type.Country }
+
+  /**
+   * Whether this location is a Region.
+   */
+  val isRegion: Boolean by lazy { this.type == Type.Region }
+
+  /**
+   * Whether this location is a Continent.
+   */
+  val isContinent: Boolean by lazy { this.type == Type.Continent }
+
+  /**
    * The list of not null parent IDs, from the nearest in the hierarchy to the top (excluding the region).
    */
   val parentsIds: List<String> by lazy {
