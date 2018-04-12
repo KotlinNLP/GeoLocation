@@ -151,13 +151,15 @@ class LocationsFinder(
   }
 
   /**
-   * Search candidates in the input text that match a set of given entities.
+   * Search entities in the input text that match a set of given entities.
    *
    * @param entities a set of entities
    *
    * @return a set of candidates lower names found in the input text
    */
-  private fun searchInText(entities: Set<String>): Set<String> = setOf() // TODO: implement
+  private fun searchInText(entities: Set<String>): Set<String> = entities.filter {
+    this.inputText.toLowerCase().findAnyOf(listOf(it)) != null
+  }.toSet()
 
   /**
    * Set the current candidates scores.
