@@ -166,6 +166,7 @@ class LocationsFinder(
 
     this.candidateLocationsMap.values.forEach {
       this.setScoreByParents(it)
+      this.setScoreByBrothers(it)
     }
   }
 
@@ -181,5 +182,17 @@ class LocationsFinder(
       this.candidateLocationsMap[parent.id]?.let { location.boostByParent(it) } ?:
         location.boostByParentLabels(parent = parent, candidateNames = this.addingCandidates, rateFactor = 0.333)
     }
+  }
+
+  /**
+   * Set the score of a given [location] by its brothers (locations under the same hierarchic upper level).
+   *
+   * @param location a candidate location
+   */
+  private fun setScoreByBrothers(location: ExtendedLocation) {
+
+    this.candidateLocationsMap.values
+      .filter { it.isBrother(location) }
+      .forEach { location.boostByBrother(brother = it, coordinateEntitiesMap = this.coordinateEntitiesMap) }
   }
 }
