@@ -37,7 +37,7 @@ class LocationsFinder(
   private lateinit var inputText: String
 
   /**
-   * The map of coordinate entities.
+   * The map of entities to the groups of coordinate entities in which they are involved.
    */
   private lateinit var coordinateEntitiesMap: Map<String, Set<String>>
 
