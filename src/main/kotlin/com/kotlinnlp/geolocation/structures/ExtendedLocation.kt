@@ -150,6 +150,42 @@ data class ExtendedLocation(
   }
 
   /**
+   * Whether this location is more probable than another, regarding their score, type, sub-type and population.
+   *
+   * @param otherLocation another extended location
+   *
+   * @return whether this location is more probable then another
+   */
+  fun isMoreProbableThan(otherLocation: ExtendedLocation): Boolean {
+
+    val thisLoc: Location = this.location
+    val otherLoc: Location = otherLocation.location
+
+    if (this.score > otherLocation.score) return true
+
+    if (this.score == otherLocation.score) {
+
+      // City >> Admin Area 1
+      if (thisLoc.isGreatCity && otherLoc.isAdminArea1) return true
+
+      // Country, Admin Area 1, Great City >> Little City
+      if (thisLoc.let { it.isCountry || it.isAdminArea1 || it.isGreatCity } && otherLoc.isLittleCity) return true
+
+      // Country >> Admin Area 1, Continent
+      if (thisLoc.isCountry && otherLoc.let { it.isAdminArea1 || it.isCountry }) return true
+
+      // (Great City | Country) & (Great City | Country)
+      if (thisLoc.let { it.isCountry || it.isGreatCity } && otherLoc.let { it.isCountry || it.isGreatCity }) {
+
+        // Compare populations
+        if (this.comparePopulation(otherLocation) > 0) return true
+      }
+    }
+
+    return false
+  }
+
+  /**
    * @param parent a parent of this location
    *
    * @return whether the given [parent] is influential to score this location
@@ -199,5 +235,28 @@ data class ExtendedLocation(
     }
 
     this.score += rateFactor * finalBoost
+  }
+
+  /**
+   * Compare the population of this location with another.
+   *
+   * @param otherLocation another extended location
+   *
+   * @return 0 if the two population properties are equal
+   *         -1 if this location population is null or less then the other one
+   *         +1 if the other location population is null or less then this one
+   */
+  private fun comparePopulation(otherLocation: ExtendedLocation): Int {
+
+    val thisPop: Int? = this.location.population
+    val otherPop: Int? = otherLocation.location.population
+
+    if (thisPop == otherPop) return 0
+
+    return when {
+      thisPop == null -> -1
+      otherPop == null -> 1
+      else -> thisPop.compareTo(otherPop)
+    }
   }
 }
