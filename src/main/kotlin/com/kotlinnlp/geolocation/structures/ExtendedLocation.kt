@@ -56,7 +56,7 @@ data class ExtendedLocation(
   /**
    * A map of entities scores associated by name
    */
-  private val entitiesScoresMap: Map<String, Double> = this.entities.associate { it.name to it.score }
+  private val entitiesScoresMap: Map<String, Double> = this.entities.associate { it.normName to it.score }
 
   /**
    * Boost the [score] of this location by a given [parent] and vice versa.
