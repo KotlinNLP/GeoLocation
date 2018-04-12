@@ -105,6 +105,11 @@ data class Location(
   val isCity: Boolean by lazy { this.type == Type.City }
 
   /**
+   * Whether this location is a little City (sub-type != "city").
+   */
+  val isLittleCity: Boolean by lazy { this.type == Type.City && this.subType != "city" }
+
+  /**
    * Whether this location is a great City (sub-type = "city").
    */
   val isGreatCity: Boolean by lazy { this.type == Type.City && this.subType == "city" }
