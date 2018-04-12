@@ -141,7 +141,7 @@ data class ExtendedLocation(
 
     if (otherLoc.parentsIds.first() != thisLoc.parentsIds.first()) {
 
-      val analogousCities: Boolean = otherLoc.type == Location.Type.City && otherLoc.subType == thisLoc.subType
+      val analogousCities: Boolean = otherLoc.isCity && otherLoc.subType == thisLoc.subType
 
       if (!analogousCities || otherLoc.countryId != thisLoc.countryId) return false
     }
@@ -155,9 +155,7 @@ data class ExtendedLocation(
    * @return whether the given [parent] is influential to score this location
    */
   private fun parentIsInfluential(parent: Location): Boolean =
-    parent.type == Location.Type.AdminArea1 ||
-      parent.type == Location.Type.AdminArea2 ||
-      (parent.type == Location.Type.Country && !this.location.isInsideAdminArea2)
+    parent.isAdminArea1 || parent.isAdminArea2 || (parent.isCountry && !this.location.isInsideAdminArea2)
 
   /**
    * Get a list of <name, score> entities entries of this location.
