@@ -152,7 +152,7 @@ class LocationsFinder(
     location.parents.forEach { parent ->
 
       this.candidateLocationsMap[parent.id]?.let { location.boostByParent(it) } ?:
-        location.boostByParentLabels(parent = parent, candidateNames = this.addingCandidates, rateFactor = 0.5)
+        location.boostByParentLabels(parent = parent, candidateNames = this.addingCandidates, rateFactor = 0.333)
     }
   }
 }
