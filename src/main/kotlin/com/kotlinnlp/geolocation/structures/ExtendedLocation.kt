@@ -85,6 +85,18 @@ data class ExtendedLocation(
   }
 
   /**
+   * Boost the [score] of this location for each label of a given parent that is present in a given set of candidates.
+   *
+   * @param parent a parent of this location
+   * @param candidateNames a set of candidate names (must be lower case)
+   * @param rateFactor a rate factor by which each boost is multiplied before it is applied
+   */
+  fun boostByParentLabels(parent: Location, candidateNames: Set<String>, rateFactor: Double) {
+
+    parent.labels.filter { it in candidateNames }.forEach { this.score += rateFactor * this.initScore }
+  }
+
+  /**
    * @param parent a parent of this location
    *
    * @return whether the given [parent] is influential to score this location
