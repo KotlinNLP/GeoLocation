@@ -126,7 +126,7 @@ data class ExtendedLocation(
    * @param entitiesEntries the <name, score> entities entries
    * @param boostMap the boost map in which to save each entity boost
    * @param boostMapRelative the boost map of relatives in which to check if an entity already boosted this location
-   * @param rateFactor a rate factor multiplied to the boost before applying it (default = 1.0)
+   * @param rateFactor a rate factor by which the boost is multiplied before it is applied (default = 1.0)
    */
   private fun boostScore(entitiesEntries: List<Map.Entry<String, Double>>,
                          boostMap: MutableMap<String, Double>,
