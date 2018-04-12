@@ -74,12 +74,12 @@ data class ExtendedLocation(
       this.boostScore(
         entitiesEntries = parent.getEntitiesEntries(exceptNames = entitiesInters),
         boostMap = this.boost.parents,
-        boostMapRelative = this.boost.children)
+        relativesBoostMaps = listOf(this.boost.children))
 
       parent.boostScore(
         entitiesEntries = this.getEntitiesEntries(exceptNames = entitiesInters),
-        boostMap = this.boost.parents,
-        boostMapRelative = this.boost.children,
+        boostMap = this.boost.children,
+        relativesBoostMaps = listOf(this.boost.parents),
         rateFactor = 0.5)
     }
   }
@@ -150,20 +150,22 @@ data class ExtendedLocation(
    *
    * @param entitiesEntries the <name, score> entities entries
    * @param boostMap the boost map in which to save each entity boost
-   * @param boostMapRelative the boost map of relatives in which to check if an entity already boosted this location
+   * @param relativesBoostMaps the boost maps of relatives in which to check if an entity already boosted this location
    * @param rateFactor a rate factor by which the boost is multiplied before it is applied (default = 1.0)
    */
   private fun boostScore(entitiesEntries: List<Map.Entry<String, Double>>,
                          boostMap: MutableMap<String, Double>,
-                         boostMapRelative: MutableMap<String, Double>,
+                         relativesBoostMaps: List<MutableMap<String, Double>>,
                          rateFactor: Double = 1.0) {
 
     var finalBoost = 0.0
 
     entitiesEntries.forEach { (name, score) ->
 
+      val validBoostMaps = relativesBoostMaps.filter { name in it }
+
       // If the entity already boosted this location as another relative, mediates the boosts
-      val boost: Double = boostMapRelative[name]?.let { (score + it) / 2 } ?: score
+      val boost: Double = (score + validBoostMaps.sumByDouble { it.getValue(name) }) / (validBoostMaps.size + 1)
 
       boostMap[name] = boost
 
