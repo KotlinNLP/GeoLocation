@@ -97,6 +97,31 @@ data class ExtendedLocation(
   }
 
   /**
+   * Whether this location is a brother of another (they have the same hierarchic upper level or they are analogous
+   * cities of the same country).
+   *
+   * @param otherLocation an extended location
+   *
+   * @return whether this location is a brother of the given [otherLocation]
+   */
+  fun isBrother(otherLocation: ExtendedLocation): Boolean {
+
+    val thisLoc: Location = this.location
+    val otherLoc: Location = otherLocation.location
+
+    if (otherLoc.id == thisLoc.id || otherLoc.type != thisLoc.type) return false
+
+    if (otherLoc.parentsIds.first() != thisLoc.parentsIds.first()) {
+
+      val analogousCities: Boolean = otherLoc.type == Location.Type.City && otherLoc.subType == thisLoc.subType
+
+      if (!analogousCities || otherLoc.countryId != thisLoc.countryId) return false
+    }
+
+    return true
+  }
+
+  /**
    * @param parent a parent of this location
    *
    * @return whether the given [parent] is influential to score this location
