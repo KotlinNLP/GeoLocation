@@ -49,9 +49,9 @@ data class ExtendedLocation(
   private val boost: Boost = Boost()
 
   /**
-   * The list of [entities] names.
+   * The set of [entities] names.
    */
-  private val entitiesNames: List<String> by lazy { this.entities.map { it.normName } }
+  private val entitiesNames: Set<String> by lazy { this.entities.map { it.normName }.toSet() }
 
   /**
    * A map of entities scores associated by name
@@ -61,7 +61,7 @@ data class ExtendedLocation(
   /**
    * Boost the [score] of this location by a given [parent] and vice versa.
    *
-   * @param parent the extended location of a parent of [location]
+   * @param parent the extended location of a parent of this [location]
    */
   fun boostByParent(parent: ExtendedLocation) {
 
@@ -94,6 +94,34 @@ data class ExtendedLocation(
   fun boostByParentLabels(parent: Location, candidateNames: Set<String>, rateFactor: Double) {
 
     parent.labels.filter { it in candidateNames }.forEach { this.score += rateFactor * this.initScore }
+  }
+
+  /**
+   * Boost the [score] of this location by a given [brother].
+   *
+   * @param brother the extended location of a brother of this [location]
+   * @param coordinateEntitiesMap the map of coordinate entities
+   */
+  fun boostByBrother(brother: ExtendedLocation, coordinateEntitiesMap: Map<String, Set<String>>) {
+
+    val entitiesInters: Set<String> = this.entitiesNames.intersect(brother.entitiesNames)
+    val coordinatesEntities: List<String> = brother.entitiesNames.filter { name ->
+      coordinateEntitiesMap[name]?.any { it != name && it in this.entitiesNames } ?: false
+    }
+    val notCoordinatesEntities: Set<String> = brother.entitiesNames.subtract(coordinatesEntities)
+
+    // Boost by brothers that are not coordinate
+    this.boostScore(
+      entitiesEntries = brother.getEntitiesEntries(exceptNames = entitiesInters.union(coordinatesEntities)),
+      boostMap = this.boost.brothers,
+      relativesBoostMaps = listOf(this.boost.children, this.boost.parents),
+      rateFactor = 0.5)
+
+    // Boost by brothers that are coordinate
+    this.boostScore(
+      entitiesEntries = brother.getEntitiesEntries(exceptNames = entitiesInters.union(notCoordinatesEntities)),
+      boostMap = this.boost.brothers,
+      relativesBoostMaps = listOf(this.boost.children, this.boost.parents))
   }
 
   /**
