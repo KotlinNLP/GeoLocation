@@ -37,6 +37,11 @@ class LocationsFinder(
   private lateinit var inputText: String
 
   /**
+   * The map of coordinate entities.
+   */
+  private lateinit var coordinateEntitiesMap: Map<String, Set<String>>
+
+  /**
    * The map of current candidate locations associated by id.
    */
   private lateinit var candidateLocationsMap: Map<String, ExtendedLocation>
@@ -52,14 +57,18 @@ class LocationsFinder(
    *
    * @param text the input text
    * @param candidateEntities a set of entities found in a text, candidate as locations
+   * @param coordinateEntitiesGroup a list of groups of entities that are coordinate in the text
    *
    * @return a list with the same length of the given [candidateEntities], containing at each position the related location
    *         if one has been found, otherwise null
    */
-  fun getLocations(text: String, candidateEntities: Set<CandidateEntity>): List<Location?> {
+  fun getLocations(text: String,
+                   candidateEntities: Set<CandidateEntity>,
+                   coordinateEntitiesGroup: List<Set<String>>): List<Location?> {
 
     this.inputText = text
     this.setCandidateLocations(candidateEntities)
+    this.setCoordinateEntitiesMap(coordinateEntitiesGroup)
 
     // TODO: add this.solveAmbiguities()
 
@@ -106,6 +115,24 @@ class LocationsFinder(
     val parents: List<Location> = location.parentsIds.map { this.dictionary.getValue(it) }
 
     return ExtendedLocation(location = location, parents = parents, entities = entities.toList(), initScore = score)
+  }
+
+  /**
+   * Set the coordinate entities map.
+   *
+   * @param coordinateEntitiesGroups a list of groups of entities that are coordinate in the text
+   */
+  private fun setCoordinateEntitiesMap(coordinateEntitiesGroups: List<Set<String>>) {
+
+    val coordinateEntitiesMap = mutableMapOf<String, Set<String>>()
+
+    coordinateEntitiesGroups.forEach { entitiesGroup ->
+      entitiesGroup.forEach { entity ->
+        coordinateEntitiesMap[entity] = entitiesGroup
+      }
+    }
+
+    this.coordinateEntitiesMap = coordinateEntitiesMap
   }
 
   /**
