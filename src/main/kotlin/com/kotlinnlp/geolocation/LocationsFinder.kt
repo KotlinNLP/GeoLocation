@@ -120,7 +120,7 @@ class LocationsFinder(
     // A set of adding entities that could be mentioned in the text.
     val addingEntities: Set<String> = addingLocationIds.flatMap { id -> this.dictionary.getValue(id).labels }.toSet()
 
-    this.addingCandidates = this.searchInText(entities = addingEntities)
+    this.addingCandidates = this.searchInText(entities = addingEntities) // TODO: differentiate between title and body?
   }
 
   /**
