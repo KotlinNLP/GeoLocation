@@ -100,13 +100,13 @@ data class ExtendedLocation(
    * Boost the [score] of this location by a given [brother].
    *
    * @param brother the extended location of a brother of this [location]
-   * @param coordinateEntitiesMap the map of coordinate entities
+   * @param coordinateEntitiesMap the map of entities to the groups of coordinate entities in which they are involved
    */
-  fun boostByBrother(brother: ExtendedLocation, coordinateEntitiesMap: Map<String, Set<String>>) {
+  fun boostByBrother(brother: ExtendedLocation, coordinateEntitiesMap: Map<String, List<Set<String>>>) {
 
     val entitiesInters: Set<String> = this.entitiesNames.intersect(brother.entitiesNames)
     val coordinatesEntities: List<String> = brother.entitiesNames.filter { name ->
-      coordinateEntitiesMap[name]?.any { it != name && it in this.entitiesNames } ?: false
+      coordinateEntitiesMap[name]?.any { group -> group.any { it != name && it in this.entitiesNames } } ?: false
     }
     val notCoordinatesEntities: Set<String> = brother.entitiesNames.subtract(coordinatesEntities)
 

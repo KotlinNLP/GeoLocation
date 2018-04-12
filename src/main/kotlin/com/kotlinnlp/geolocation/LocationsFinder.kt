@@ -39,7 +39,7 @@ class LocationsFinder(
   /**
    * The map of entities to the groups of coordinate entities in which they are involved.
    */
-  private lateinit var coordinateEntitiesMap: Map<String, Set<String>>
+  private lateinit var coordinateEntitiesMap: Map<String, List<Set<String>>>
 
   /**
    * The map of current candidate locations associated by id.
@@ -124,11 +124,11 @@ class LocationsFinder(
    */
   private fun setCoordinateEntitiesMap(coordinateEntitiesGroups: List<Set<String>>) {
 
-    val coordinateEntitiesMap = mutableMapOf<String, Set<String>>()
+    val coordinateEntitiesMap = mutableMapOf<String, MutableList<Set<String>>>()
 
     coordinateEntitiesGroups.forEach { entitiesGroup ->
       entitiesGroup.forEach { entity ->
-        coordinateEntitiesMap[entity] = entitiesGroup
+        coordinateEntitiesMap.getOrPut(entity) { mutableListOf() }.add(entitiesGroup)
       }
     }
 
