@@ -112,7 +112,12 @@ internal class LocationsFinder(
     val score: Double = entities.sumByDouble { it.score } / entities.size
     val parents: List<Location> = location.parentsIds.map { this.dictionary.getValue(it) }
 
-    return ExtendedLocation(location = location, parents = parents, entities = entities.toList(), initScore = score)
+    return ExtendedLocation(
+      location = location,
+      parents = parents,
+      candidateEntities = entities.toList(),
+      initScore = score
+    )
   }
 
   /**
@@ -227,7 +232,7 @@ internal class LocationsFinder(
     val bestLocations: MutableMap<String, ExtendedLocation?> = mutableMapOf()
 
     this.candidateLocationsById.values.forEach { location ->
-      location.entities.forEach { entity ->
+      location.candidateEntities.forEach { entity ->
         bestLocations[entity.name].let { bestLoc ->
           if (bestLoc == null || location.isMoreProbableThan(bestLoc)) bestLocations[entity.name] = location
         }

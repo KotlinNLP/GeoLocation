@@ -10,17 +10,17 @@ package com.kotlinnlp.geolocation.structures
 import java.lang.Double.max
 
 /**
- * A structure that extends a location with adding properties, such as [score].
+ * A structure that extends a location with adding properties, such as [score] and [confidence].
  *
  * @property location a location
  * @param parents the list of the [location] parents, in the same order of its 'parentIds' property
- * @param entities the list of entities from which this location originated
+ * @param candidateEntities the list of candidate entities from which this location originated
  * @param initScore the initial score of the location
  */
 data class ExtendedLocation(
   val location: Location,
   internal val parents: List<Location>,
-  internal val entities: List<CandidateEntity>,
+  internal val candidateEntities: List<CandidateEntity>,
   private val initScore: Double
 ) {
 
@@ -56,14 +56,14 @@ data class ExtendedLocation(
   private val boost: Boost = Boost()
 
   /**
-   * The set of [entities] names.
+   * The set of [candidateEntities] names.
    */
-  private val entitiesNames: Set<String> by lazy { this.entities.map { it.normName }.toSet() }
+  private val entitiesNames: Set<String> by lazy { this.candidateEntities.map { it.normName }.toSet() }
 
   /**
    * A map of entities scores associated by name
    */
-  private val entitiesScoresMap: Map<String, Double> = this.entities.associate { it.normName to it.score }
+  private val entitiesScoresMap: Map<String, Double> = this.candidateEntities.associate { it.normName to it.score }
 
   /**
    * @return a string representation of this class
