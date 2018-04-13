@@ -62,16 +62,16 @@ internal class LocationsFinder(
    */
   init {
 
+    // Attention: the order of the operations is very important!
+
     this.candidateLocationsMap = this.buildCandidateLocationsMap(candidateEntities)
     this.coordinateEntitiesMap = this.buildCoordinateEntitiesMap(coordinateEntitiesGroups)
-
     // TODO: add this.solveAmbiguities()
-
     this.addingEntities = this.buildAddingEntities()
+
     this.setScores()
 
-    this.bestLocations = this.findBestLocations()
-    ConfidenceHelper(this.bestLocations.values.filterNotNull()).setConfidences()
+    this.bestLocations = this.buildBestLocations()
   }
 
   /**
@@ -201,6 +201,23 @@ internal class LocationsFinder(
   }
 
   /**
+   * Build the best locations.
+   *
+   * @return a map that associates an extended location (or null if no one has been found) to each candidate
+   */
+  private fun buildBestLocations(): Map<String, ExtendedLocation?> {
+
+    val bestLocations: Map<String, ExtendedLocation?> = this.findBestLocations()
+    val notNullBestLocations: List<ExtendedLocation> = bestLocations.values.filterNotNull()
+
+    ConfidenceHelper(notNullBestLocations).setConfidences()
+
+    this.normalizeScores(notNullBestLocations)
+
+    return bestLocations
+  }
+
+  /**
    * Find the locations that best represent each input candidate entity.
    *
    * @return a map that associates an extended location (or null if no one has been found) to each candidate
@@ -220,5 +237,17 @@ internal class LocationsFinder(
     this.inputEntitiesSet.subtract(bestLocations.keys).forEach { bestLocations[it] = null }
 
     return bestLocations
+  }
+
+  /**
+   * Normalize the scores of the given locations.
+   *
+   * @param locations a list of locations
+   */
+  private fun normalizeScores(locations: List<ExtendedLocation>) {
+
+    val scoresSum: Double = locations.sumByDouble { it.score }
+
+    locations.forEach { it.score.div(scoresSum) }
   }
 }
