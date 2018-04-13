@@ -20,14 +20,14 @@ import com.kotlinnlp.geolocation.structures.ExtendedLocation
  * @param candidateEntities a set of entities found in the [text], candidate as locations
  * @param coordinateEntitiesGroups a list of groups of entities that are coordinate in the text
  *
- * @return a map that associates an extended location (or null if no one has been found) to each candidate
+ * @return a list of the best extended locations found, sorted by descending importance
  */
 fun findLocations(
   dictionary: LocationsDictionary,
   text: String,
   candidateEntities: Set<CandidateEntity>,
   coordinateEntitiesGroups: List<Set<String>>
-): Map<String, ExtendedLocation?> =
+): List<ExtendedLocation> =
   LocationsFinder(
     dictionary = dictionary,
     text = text,
