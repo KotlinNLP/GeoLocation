@@ -38,13 +38,13 @@ data class ExtendedLocation(
   )
 
   /**
-   * The location score.
+   * The score that indicates how much the location is relevant respect to the others in the text.
    */
   var score: Double = this.initScore
     internal set
 
   /**
-   * The score of confidence that the location is the correct one associated to its candidate.
+   * The score of confidence that the location is the correct one associated to its candidates.
    * This score is calculated looking to the relations between this location and the others found in the input text.
    */
   var confidence: Double = 0.0
