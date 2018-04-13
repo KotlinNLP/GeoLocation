@@ -53,18 +53,17 @@ class LocationsFinder(
   private lateinit var addingCandidates: Set<String>
 
   /**
-   * Get the valid locations within a given list of candidate entities.
+   * Get the locations that best represent the candidate entities given in a set.
    *
    * @param text the input text
    * @param candidateEntities a set of entities found in a text, candidate as locations
    * @param coordinateEntitiesGroup a list of groups of entities that are coordinate in the text
    *
-   * @return a list with the same length of the given [candidateEntities], containing at each position the related location
-   *         if one has been found, otherwise null
+   * @return a map that associates a location (or null if no one has been found) to each candidate
    */
   fun getLocations(text: String,
                    candidateEntities: Set<CandidateEntity>,
-                   coordinateEntitiesGroup: List<Set<String>>): List<Location?> {
+                   coordinateEntitiesGroup: List<Set<String>>): Map<String, Location?> {
 
     this.inputText = text
     this.setCandidateLocations(candidateEntities)
