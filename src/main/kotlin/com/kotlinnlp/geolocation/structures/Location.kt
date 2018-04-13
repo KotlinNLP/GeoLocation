@@ -147,12 +147,12 @@ data class Location(
   /**
    * Whether this location is a little City (sub-type != "city").
    */
-  val isLittleCity: Boolean by lazy { this.type == Type.City && this.subType != "city" }
+  val isLittleCity: Boolean by lazy { this.isCity && this.subType != "city" }
 
   /**
    * Whether this location is a big City (sub-type = "city").
    */
-  val isBigCity: Boolean by lazy { this.type == Type.City && this.subType == "city" }
+  val isBigCity: Boolean by lazy { this.isCity && this.subType == "city" }
 
   /**
    * Whether this location is an Admin Area 1.
