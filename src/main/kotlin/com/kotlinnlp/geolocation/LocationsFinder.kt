@@ -262,6 +262,6 @@ internal class LocationsFinder(
 
     val scoresSum: Double = locations.sumByDouble { it.score }
 
-    locations.forEach { it.score.div(scoresSum) }
+    locations.forEach { it.score /= scoresSum }
   }
 }
