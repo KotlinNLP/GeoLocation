@@ -24,7 +24,7 @@ import java.io.Serializable
  * @param filename the name of the input file containing all the locations in JSON line format
  * @param verbose whether to print the loading progress (default = true)
  */
-class LocationsDictionary(filename: String = defaultDictionaryPath, verbose: Boolean = true) : Serializable {
+class LocationsDictionary(filename: String, verbose: Boolean = true) : Serializable {
 
   companion object {
 
@@ -33,12 +33,6 @@ class LocationsDictionary(filename: String = defaultDictionaryPath, verbose: Boo
      */
     @Suppress("unused")
     private const val serialVersionUID: Long = 1L
-
-    /**
-     * The path of the default JSON line file containing all the locations.
-     */
-    private val defaultDictionaryPath =
-      LocationsDictionary::class.java.classLoader.getResource("locations.jsonl").path
 
     /**
      * A set of location sub-types not valid to be inserted in the dictionary.
