@@ -20,7 +20,7 @@ import java.lang.Double.max
 data class ExtendedLocation(
   val location: Location,
   internal val parents: List<Location>,
-  private val entities: List<CandidateEntity>,
+  internal val entities: List<CandidateEntity>,
   private val initScore: Double
 ) {
 
