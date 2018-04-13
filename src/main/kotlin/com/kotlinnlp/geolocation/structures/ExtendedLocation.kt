@@ -44,6 +44,13 @@ data class ExtendedLocation(
     private set
 
   /**
+   * The score of confidence that the location is the correct one associated to its candidate.
+   * This score is calculated looking to the relations between this location and the others found in the input text.
+   */
+  var confidence: Double = 0.0
+    internal set
+
+  /**
    * The score boosts structure.
    */
   private val boost: Boost = Boost()
