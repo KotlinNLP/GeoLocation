@@ -214,7 +214,7 @@ internal class LocationsFinder(
     this.normalizeScores(bestLocations)
 
     return bestLocations.sortedWith(
-      Comparator({ locA, locB -> if (locA.isMoreProbableThan(locB)) 1 else -1 })
+      Comparator({ locA, locB -> if (locA.isMoreProbableThan(locB)) -1 else 1 })
     )
   }
 
