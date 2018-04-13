@@ -37,6 +37,11 @@ internal class LocationsFinder(
   val bestLocations: Map<String, ExtendedLocation?>
 
   /**
+   * A set of names of the input candidate entities.
+   */
+  private val inputEntitiesSet: Set<String> = candidateEntities.map { it.name }.toSet()
+
+  /**
    * The map of entities to the groups of coordinate entities in which they are involved.
    */
   private val coordinateEntitiesMap: Map<String, List<Set<String>>>
@@ -56,6 +61,7 @@ internal class LocationsFinder(
    * Calculate scores and find best locations.
    */
   init {
+
     this.candidateLocationsMap = this.buildCandidateLocationsMap(candidateEntities)
     this.coordinateEntitiesMap = this.buildCoordinateEntitiesMap(coordinateEntitiesGroups)
 
@@ -194,11 +200,24 @@ internal class LocationsFinder(
   }
 
   /**
-   * Find the location that best represent each input candidate entity.
+   * Find the locations that best represent each input candidate entity.
    *
    * @return a map that associates an extended location (or null if no one has been found) to each candidate
    */
   private fun findBestLocations(): Map<String, ExtendedLocation?> {
-    TODO()
+
+    val bestLocations: MutableMap<String, ExtendedLocation?> = mutableMapOf()
+
+    this.candidateLocationsMap.values.forEach { location ->
+      location.entities.forEach { entity ->
+        bestLocations[entity.name].let { bestLoc ->
+          if (bestLoc == null || location.isMoreProbableThan(bestLoc)) bestLocations[entity.name] = location
+        }
+      }
+    }
+
+    this.inputEntitiesSet.subtract(bestLocations.keys).forEach { bestLocations[it] = null }
+
+    return bestLocations
   }
 }
