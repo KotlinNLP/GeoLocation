@@ -57,17 +57,17 @@ class LocationsFinder(
    *
    * @param text the input text
    * @param candidateEntities a set of entities found in a text, candidate as locations
-   * @param coordinateEntitiesGroup a list of groups of entities that are coordinate in the text
+   * @param coordinateEntitiesGroups a list of groups of entities that are coordinate in the text
    *
    * @return a map that associates a location (or null if no one has been found) to each candidate
    */
   fun getLocations(text: String,
                    candidateEntities: Set<CandidateEntity>,
-                   coordinateEntitiesGroup: List<Set<String>>): Map<String, Location?> {
+                   coordinateEntitiesGroups: List<Set<String>>): Map<String, Location?> {
 
     this.inputText = text
     this.setCandidateLocations(candidateEntities)
-    this.setCoordinateEntitiesMap(coordinateEntitiesGroup)
+    this.setCoordinateEntitiesMap(coordinateEntitiesGroups)
 
     // TODO: add this.solveAmbiguities()
 
