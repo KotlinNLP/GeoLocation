@@ -21,6 +21,12 @@ class LocationsDictionary {
   companion object {
 
     /**
+     * The path of the default JSON line file containing all the locations.
+     */
+    private val defaultDictionaryPath =
+      LocationsDictionary::class.java.classLoader.getResource("locations.jsonl").path
+
+    /**
      * A set of location sub-types not valid to be inserted in the dictionary.
      */
     private val INVALID_SUB_TYPES = setOf("hamlet", "village")
@@ -28,9 +34,11 @@ class LocationsDictionary {
     /**
      * Load a [LocationsDictionary] from a file in JSON line format (as explained in the resources `README.md` file).
      *
+     * @param filename the name of the input file containing all the locations in JSON line format
+     *
      * @return a new locations dictionary
      */
-    fun load(filename: String): LocationsDictionary {
+    fun load(filename: String = defaultDictionaryPath): LocationsDictionary {
 
       val dictionary = LocationsDictionary()
       val progress = ProgressIndicatorBar(total = getLinesCount(filename))

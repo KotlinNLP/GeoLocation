@@ -13,23 +13,12 @@ import com.kotlinnlp.geolocation.structures.ExtendedLocation
 import com.kotlinnlp.geolocation.structures.Location
 
 /**
- * The com.kotlinnlp.geolocation.LocationsFinder searches for all the valid locations among a set of candidate entities found in a text, already
+ * The LocationsFinder searches for all the valid locations among a set of candidate entities found in a text, already
  * scored respect to semantic properties.
  *
  * @param dictionary a dictionary containing all the locations that can be recognized
  */
-class LocationsFinder(
-  private val dictionary: LocationsDictionary = LocationsDictionary.load(defaultDictionaryPath)
-) {
-
-  companion object {
-
-    /**
-     * The path of the default locations dictionary file.
-     */
-    private val defaultDictionaryPath =
-      LocationsFinder::class.java.classLoader.getResource("locations.jsonl").path
-  }
+class LocationsFinder(private val dictionary: LocationsDictionary) {
 
   /**
    * The input text.
