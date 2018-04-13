@@ -74,7 +74,7 @@ data class ExtendedLocation(
   /**
    * @return a string representation of this class
    */
-  override fun toString(): String = "[%.2f] %s".format(this.score, this.location)
+  override fun toString(): String = "[%.2f, %.2f] %s".format(this.score, this.confidence, this.location)
 
   /**
    * Boost the [score] of this location by a given [parent] and vice versa.
