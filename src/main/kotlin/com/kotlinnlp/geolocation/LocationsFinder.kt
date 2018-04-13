@@ -32,14 +32,9 @@ internal class LocationsFinder(
 ) {
 
   /**
-   * The candidate entities names mapped to best locations found (or null if no one has been found).
+   * The list of the best extended locations found, sorted by descending importance.
    */
-  val bestLocations: Map<String, ExtendedLocation?>
-
-  /**
-   * A set of names of the input candidate entities.
-   */
-  private val inputEntitiesSet: Set<String> = candidateEntities.map { it.name }.toSet()
+  val bestLocations: List<ExtendedLocation>
 
   /**
    * The map of entities to the groups of coordinate entities in which they are involved.
@@ -208,16 +203,15 @@ internal class LocationsFinder(
   /**
    * Build the best locations.
    *
-   * @return a map that associates an extended location (or null if no one has been found) to each candidate
+   * @return a list of the best extended locations found, sorted by descending importance
    */
-  private fun buildBestLocations(): Map<String, ExtendedLocation?> {
+  private fun buildBestLocations(): List<ExtendedLocation> {
 
-    val bestLocations: Map<String, ExtendedLocation?> = this.findBestLocations()
-    val notNullBestLocations: List<ExtendedLocation> = bestLocations.values.filterNotNull()
+    val bestLocations: List<ExtendedLocation> = this.findBestLocations()
 
-    ConfidenceHelper(notNullBestLocations).setConfidences()
+    ConfidenceHelper(bestLocations).setConfidences()
 
-    this.normalizeScores(notNullBestLocations)
+    this.normalizeScores(bestLocations)
 
     return bestLocations
   }
@@ -225,23 +219,38 @@ internal class LocationsFinder(
   /**
    * Find the locations that best represent each input candidate entity.
    *
-   * @return a map that associates an extended location (or null if no one has been found) to each candidate
+   * @return a list of the best extended locations found, sorted by descending importance
    */
-  private fun findBestLocations(): Map<String, ExtendedLocation?> {
+  private fun findBestLocations(): List<ExtendedLocation> {
 
-    val bestLocations: MutableMap<String, ExtendedLocation?> = mutableMapOf()
+    val bestLocationsMap: MutableMap<String, ExtendedLocation> = mutableMapOf()
 
     this.candidateLocationsById.values.forEach { location ->
       location.candidateEntities.forEach { entity ->
-        bestLocations[entity.name].let { bestLoc ->
-          if (bestLoc == null || location.isMoreProbableThan(bestLoc)) bestLocations[entity.name] = location
+        bestLocationsMap[entity.name].let { bestLoc ->
+          if (bestLoc == null || location.isMoreProbableThan(bestLoc)) bestLocationsMap[entity.name] = location
         }
       }
     }
 
-    this.inputEntitiesSet.subtract(bestLocations.keys).forEach { bestLocations[it] = null }
+    this.setLocationsEntities(bestLocationsMap)
 
-    return bestLocations
+    return bestLocationsMap.values.sortedWith(
+      Comparator({ locA, locB -> if (locA.isMoreProbableThan(locB)) 1 else -1 })
+    )
+  }
+
+  /**
+   * Set the 'entities' property of each best location.
+   *
+   * @param bestLocationsMap the map of best extended locations associated by candidate
+   */
+  private fun setLocationsEntities(bestLocationsMap: Map<String, ExtendedLocation>) {
+
+    val candidatesByLocationId: Map<String, List<String>> =
+      bestLocationsMap.keys.groupBy { bestLocationsMap.getValue(it).location.id }
+
+    bestLocationsMap.values.forEach { it.entities = candidatesByLocationId.getValue(it.location.id) }
   }
 
   /**
