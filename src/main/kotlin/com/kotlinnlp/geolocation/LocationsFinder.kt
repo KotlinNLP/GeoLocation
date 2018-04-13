@@ -49,7 +49,7 @@ internal class LocationsFinder(
   /**
    * The map of current candidate locations associated by id.
    */
-  private val candidateLocationsMap: Map<String, ExtendedLocation>
+  private val candidateLocationsById: Map<String, ExtendedLocation>
 
   /**
    * A set of adding candidates (taken from the parents labels) that are mentioned in the text.
@@ -64,7 +64,7 @@ internal class LocationsFinder(
 
     // Attention: the order of the operations is very important!
 
-    this.candidateLocationsMap = this.buildCandidateLocationsMap(candidateEntities)
+    this.candidateLocationsById = this.buildCandidateLocationsById(candidateEntities)
     this.coordinateEntitiesMap = this.buildCoordinateEntitiesMap(coordinateEntitiesGroups)
     // TODO: add this.solveAmbiguities()
     this.addingEntities = this.buildAddingEntities()
@@ -75,13 +75,13 @@ internal class LocationsFinder(
   }
 
   /**
-   * Build the candidate locations map.
+   * Build the candidate locations associated by ID.
    *
    * @param candidateEntities a set of candidate entities
    *
-   * @return a map of entities names to extended locations
+   * @return a map of extended locations associated by id
    */
-  private fun buildCandidateLocationsMap(candidateEntities: Set<CandidateEntity>): Map<String, ExtendedLocation> {
+  private fun buildCandidateLocationsById(candidateEntities: Set<CandidateEntity>): Map<String, ExtendedLocation> {
 
     val entitiesNamesByLocId = mutableMapOf<String, MutableSet<CandidateEntity>>()
 
@@ -142,9 +142,9 @@ internal class LocationsFinder(
    */
   private fun buildAddingEntities(): Set<String> {
 
-    // A set of parent location ids that are not in the candidateLocationsMap.
+    // A set of parent location ids that are not in the candidateLocationsById.
     val addingLocationIds: Set<String> =
-      this.candidateLocationsMap.let { it.values.flatMap { it.location.parentsIds }.subtract(it.keys) }
+      this.candidateLocationsById.let { it.values.flatMap { it.location.parentsIds }.subtract(it.keys) }
 
     // A set of adding entities that could be mentioned in the text.
     val addingEntities: Set<String> = addingLocationIds.flatMap { id -> this.dictionary.getValue(id).labels }.toSet()
@@ -168,7 +168,7 @@ internal class LocationsFinder(
    */
   private fun setScores() {
 
-    this.candidateLocationsMap.values.forEach {
+    this.candidateLocationsById.values.forEach {
       this.setScoreByParents(it)
       this.setScoreByBrothers(it)
     }
@@ -183,7 +183,7 @@ internal class LocationsFinder(
 
     location.parents.forEach { parent ->
 
-      this.candidateLocationsMap[parent.id]?.let { location.boostByParent(it) } ?:
+      this.candidateLocationsById[parent.id]?.let { location.boostByParent(it) } ?:
         location.boostByParentLabels(parent = parent, candidateNames = this.addingEntities, rateFactor = 0.333)
     }
   }
@@ -195,7 +195,7 @@ internal class LocationsFinder(
    */
   private fun setScoreByBrothers(location: ExtendedLocation) {
 
-    this.candidateLocationsMap.values
+    this.candidateLocationsById.values
       .filter { it.isBrother(location) }
       .forEach { location.boostByBrother(brother = it, coordinateEntitiesMap = this.coordinateEntitiesMap) }
   }
@@ -226,7 +226,7 @@ internal class LocationsFinder(
 
     val bestLocations: MutableMap<String, ExtendedLocation?> = mutableMapOf()
 
-    this.candidateLocationsMap.values.forEach { location ->
+    this.candidateLocationsById.values.forEach { location ->
       location.entities.forEach { entity ->
         bestLocations[entity.name].let { bestLoc ->
           if (bestLoc == null || location.isMoreProbableThan(bestLoc)) bestLocations[entity.name] = location
