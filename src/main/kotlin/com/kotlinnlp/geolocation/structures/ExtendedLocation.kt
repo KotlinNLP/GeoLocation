@@ -171,16 +171,16 @@ data class ExtendedLocation(
     if (this.score == otherLocation.score) {
 
       // City >> Admin Area 1
-      if (thisLoc.isGreatCity && otherLoc.isAdminArea1) return true
+      if (thisLoc.isBigCity && otherLoc.isAdminArea1) return true
 
-      // Country, Admin Area 1, Great City >> Little City
-      if (thisLoc.let { it.isCountry || it.isAdminArea1 || it.isGreatCity } && otherLoc.isLittleCity) return true
+      // Country, Admin Area 1, Big City >> Little City
+      if (thisLoc.let { it.isCountry || it.isAdminArea1 || it.isBigCity } && otherLoc.isLittleCity) return true
 
       // Country >> Admin Area 1, Continent
       if (thisLoc.isCountry && otherLoc.let { it.isAdminArea1 || it.isCountry }) return true
 
-      // (Great City | Country) & (Great City | Country)
-      if (thisLoc.let { it.isCountry || it.isGreatCity } && otherLoc.let { it.isCountry || it.isGreatCity }) {
+      // (Big City | Country) & (Big City | Country)
+      if (thisLoc.let { it.isCountry || it.isBigCity } && otherLoc.let { it.isCountry || it.isBigCity }) {
 
         // Compare populations
         if (this.comparePopulation(otherLocation) > 0) return true
