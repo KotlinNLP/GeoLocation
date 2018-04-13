@@ -162,6 +162,26 @@ data class ExtendedLocation(
   }
 
   /**
+   * Whether this location is a relative of another (they are in the same country and share a common parent).
+   *
+   * @param otherLocation an extended location
+   *
+   * @return whether this location is a relative of the given [otherLocation]
+   */
+  internal fun isRelative(otherLocation: ExtendedLocation): Boolean {
+
+    val thisLoc: Location = this.location
+    val otherLoc: Location = otherLocation.location
+
+    if (thisLoc.id == otherLoc.id) return false
+    if (!thisLoc.isInsideCountry || !otherLoc.isInsideCountry) return false
+
+
+
+    return true
+  }
+
+  /**
    * Whether this location is more probable than another, regarding their score, type, sub-type and population.
    *
    * @param otherLocation another extended location
