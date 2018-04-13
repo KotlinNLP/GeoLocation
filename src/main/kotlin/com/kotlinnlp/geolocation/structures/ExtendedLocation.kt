@@ -10,18 +10,18 @@ package com.kotlinnlp.geolocation.structures
 import java.lang.Double.max
 
 /**
- * A structure that extends a location with adding properties.
+ * A structure that extends a location with adding properties, such as [score].
  *
  * @property location a location
- * @property parents the list of the [location] parents, in the same order of its 'parentIds' property
- * @property entities the list of entities from which this location originated
- * @property initScore the initial score of the location
+ * @param parents the list of the [location] parents, in the same order of its 'parentIds' property
+ * @param entities the list of entities from which this location originated
+ * @param initScore the initial score of the location
  */
 data class ExtendedLocation(
   val location: Location,
-  val parents: List<Location>,
-  val entities: List<CandidateEntity>,
-  val initScore: Double
+  internal val parents: List<Location>,
+  private val entities: List<CandidateEntity>,
+  private val initScore: Double
 ) {
 
   /**
@@ -63,7 +63,7 @@ data class ExtendedLocation(
    *
    * @param parent the extended location of a parent of this [location]
    */
-  fun boostByParent(parent: ExtendedLocation) {
+  internal fun boostByParent(parent: ExtendedLocation) {
 
     require(parent.location.id in this.location.parentsIds) { "Invalid parent." }
 
@@ -91,7 +91,7 @@ data class ExtendedLocation(
    * @param candidateNames a set of candidate names (must be lower case)
    * @param rateFactor a rate factor by which each boost is multiplied before it is applied
    */
-  fun boostByParentLabels(parent: Location, candidateNames: Set<String>, rateFactor: Double) {
+  internal fun boostByParentLabels(parent: Location, candidateNames: Set<String>, rateFactor: Double) {
 
     parent.labels.filter { it in candidateNames }.forEach { this.score += rateFactor * this.initScore }
   }
@@ -102,7 +102,7 @@ data class ExtendedLocation(
    * @param brother the extended location of a brother of this [location]
    * @param coordinateEntitiesMap the map of entities to the groups of coordinate entities in which they are involved
    */
-  fun boostByBrother(brother: ExtendedLocation, coordinateEntitiesMap: Map<String, List<Set<String>>>) {
+  internal fun boostByBrother(brother: ExtendedLocation, coordinateEntitiesMap: Map<String, List<Set<String>>>) {
 
     val entitiesInters: Set<String> = this.entitiesNames.intersect(brother.entitiesNames)
     val coordinatesEntities: List<String> = brother.entitiesNames.filter { name ->
@@ -132,7 +132,7 @@ data class ExtendedLocation(
    *
    * @return whether this location is a brother of the given [otherLocation]
    */
-  fun isBrother(otherLocation: ExtendedLocation): Boolean {
+  internal fun isBrother(otherLocation: ExtendedLocation): Boolean {
 
     val thisLoc: Location = this.location
     val otherLoc: Location = otherLocation.location
@@ -156,7 +156,7 @@ data class ExtendedLocation(
    *
    * @return whether this location is more probable then another
    */
-  fun isMoreProbableThan(otherLocation: ExtendedLocation): Boolean {
+  internal fun isMoreProbableThan(otherLocation: ExtendedLocation): Boolean {
 
     val thisLoc: Location = this.location
     val otherLoc: Location = otherLocation.location
