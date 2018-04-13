@@ -7,6 +7,8 @@
 
 package com.kotlinnlp.geolocation.structures
 
+import java.io.Serializable
+
 /**
  * A location.
  *
@@ -40,7 +42,16 @@ data class Location(
   val population: Int? = null,
   val languages: List<String>? = null,
   val contexts: List<Context>? = null
-) {
+) : Serializable {
+
+  companion object {
+
+    /**
+     * Private val used to serialize the class (needed by Serializable).
+     */
+    @Suppress("unused")
+    private const val serialVersionUID: Long = 1L
+  }
 
   /**
    * The location type.
@@ -64,7 +75,16 @@ data class Location(
     val de: String?,
     val es: String?,
     val fr: String?
-  ) {
+  ) : Serializable {
+
+    companion object {
+
+      /**
+       * Private val used to serialize the class (needed by Serializable).
+       */
+      @Suppress("unused")
+      private const val serialVersionUID: Long = 1L
+    }
 
     /**
      * The list of not null translations.
@@ -78,7 +98,17 @@ data class Location(
    * @property lat the latitude
    * @property lon the longitude
    */
-  data class Coordinates(val lat: Double, val lon: Double)
+  data class Coordinates(val lat: Double, val lon: Double) : Serializable {
+
+    companion object {
+
+      /**
+       * Private val used to serialize the class (needed by Serializable).
+       */
+      @Suppress("unused")
+      private const val serialVersionUID: Long = 1L
+    }
+  }
 
   /**
    * An adding context.
@@ -87,7 +117,17 @@ data class Location(
    * @property name the name
    * @property level the hierarchic level (useful in case of more contexts)
    */
-  data class Context(val type: String, val name: String, val level: Int)
+  data class Context(val type: String, val name: String, val level: Int) : Serializable {
+
+    companion object {
+
+      /**
+       * Private val used to serialize the class (needed by Serializable).
+       */
+      @Suppress("unused")
+      private const val serialVersionUID: Long = 1L
+    }
+  }
 
   /**
    * The location type.
