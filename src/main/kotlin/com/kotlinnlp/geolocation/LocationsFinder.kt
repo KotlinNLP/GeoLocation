@@ -32,7 +32,7 @@ class LocationsFinder(
 ) {
 
   /**
-   * The candidate entities names mapped to best locations found.
+   * The candidate entities names mapped to best locations found (or null if no one has been found).
    */
   val bestLocations: Map<String, ExtendedLocation?>
 
@@ -196,7 +196,7 @@ class LocationsFinder(
   /**
    * Find the location that best represent each input candidate entity.
    *
-   * @return a map that associates a location (or null if no one has been found) to each candidate
+   * @return a map that associates an extended location (or null if no one has been found) to each candidate
    */
   private fun findBestLocations(): Map<String, ExtendedLocation?> {
     TODO()
