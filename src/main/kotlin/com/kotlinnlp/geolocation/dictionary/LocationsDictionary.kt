@@ -10,8 +10,12 @@ package com.kotlinnlp.geolocation.dictionary
 import com.kotlinnlp.geolocation.structures.Location
 import com.kotlinnlp.geolocation.exceptions.LocationNotFound
 import com.kotlinnlp.progressindicator.ProgressIndicatorBar
+import com.kotlinnlp.utils.Serializer
 import com.kotlinnlp.utils.forEachLine
 import com.kotlinnlp.utils.getLinesCount
+import java.io.InputStream
+import java.io.OutputStream
+import java.io.Serializable
 
 /**
  * A dictionary containing locations organized in a hierarchy per type, such as continents, countries, cities, etc..
@@ -20,9 +24,15 @@ import com.kotlinnlp.utils.getLinesCount
  * @param filename the name of the input file containing all the locations in JSON line format
  * @param verbose whether to print the loading progress (default = true)
  */
-class LocationsDictionary(filename: String = defaultDictionaryPath, verbose: Boolean = true) {
+class LocationsDictionary(filename: String = defaultDictionaryPath, verbose: Boolean = true) : Serializable {
 
   companion object {
+
+    /**
+     * Private val used to serialize the class (needed by Serializable).
+     */
+    @Suppress("unused")
+    private const val serialVersionUID: Long = 1L
 
     /**
      * The path of the default JSON line file containing all the locations.
@@ -34,6 +44,15 @@ class LocationsDictionary(filename: String = defaultDictionaryPath, verbose: Boo
      * A set of location sub-types not valid to be inserted in the dictionary.
      */
     private val INVALID_SUB_TYPES = setOf("hamlet", "village")
+
+    /**
+     * Read a [LocationsDictionary] (serialized) from an input stream and decode it.
+     *
+     * @param inputStream the [InputStream] from which to read the serialized [LocationsDictionary]
+     *
+     * @return the [LocationsDictionary] read from [inputStream] and decoded
+     */
+    fun load(inputStream: InputStream): LocationsDictionary = Serializer.deserialize(inputStream)
   }
 
   /**
@@ -89,6 +108,13 @@ class LocationsDictionary(filename: String = defaultDictionaryPath, verbose: Boo
    * @return the locations with the given [label] or null if no one has been found
    */
   fun getByLabel(label: String): List<Location>? = this.encodedLocationsByLabel[label.toLowerCase()]?.toList()
+
+  /**
+   * Serialize this [LocationsDictionary] and write it to an output stream.
+   *
+   * @param outputStream the [OutputStream] in which to write this serialized [LocationsDictionary]
+   */
+  fun dump(outputStream: OutputStream) = Serializer.serialize(this, outputStream)
 
   /**
    * Add an entry to the dictionary, given the JSON string containing the encoded properties of a location.
