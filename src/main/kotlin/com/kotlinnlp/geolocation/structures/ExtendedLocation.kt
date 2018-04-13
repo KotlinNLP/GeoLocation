@@ -41,7 +41,7 @@ data class ExtendedLocation(
    * The location score.
    */
   var score: Double = this.initScore
-    private set
+    internal set
 
   /**
    * The score of confidence that the location is the correct one associated to its candidate.
