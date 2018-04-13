@@ -24,7 +24,7 @@ import com.kotlinnlp.geolocation.structures.Location
  * @param candidateEntities a set of entities found in the [text], candidate as locations
  * @param coordinateEntitiesGroups a list of groups of entities that are coordinate in the text
  */
-class LocationsFinder(
+internal class LocationsFinder(
   private val dictionary: LocationsDictionary,
   private val text: String,
   candidateEntities: Set<CandidateEntity>,
