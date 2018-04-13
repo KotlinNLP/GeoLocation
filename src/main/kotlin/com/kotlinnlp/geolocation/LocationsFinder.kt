@@ -16,62 +16,65 @@ import com.kotlinnlp.geolocation.structures.Location
  * The LocationsFinder searches for all the valid locations among a set of candidate entities found in a text, already
  * scored respect to semantic properties.
  *
+ * A LocationsFinder is a standalone class, that must be instantiated for each input text and it makes available the
+ * [bestLocations] property containing the best locations found.
+ *
  * @param dictionary a dictionary containing all the locations that can be recognized
+ * @param text the input text
+ * @param candidateEntities a set of entities found in the [text], candidate as locations
+ * @param coordinateEntitiesGroups a list of groups of entities that are coordinate in the text
  */
-class LocationsFinder(private val dictionary: LocationsDictionary) {
+class LocationsFinder(
+  private val dictionary: LocationsDictionary,
+  private val text: String,
+  candidateEntities: Set<CandidateEntity>,
+  coordinateEntitiesGroups: List<Set<String>>
+) {
 
   /**
-   * The input text.
+   * The candidate entities names mapped to best locations found.
    */
-  private lateinit var inputText: String
+  val bestLocations: Map<String, ExtendedLocation?>
 
   /**
    * The map of entities to the groups of coordinate entities in which they are involved.
    */
-  private lateinit var coordinateEntitiesMap: Map<String, List<Set<String>>>
+  private val coordinateEntitiesMap: Map<String, List<Set<String>>>
 
   /**
    * The map of current candidate locations associated by id.
    */
-  private lateinit var candidateLocationsMap: Map<String, ExtendedLocation>
+  private val candidateLocationsMap: Map<String, ExtendedLocation>
 
   /**
    * A set of adding candidates (taken from the parents labels) that are mentioned in the text.
    * All names are lower case.
    */
-  private lateinit var addingCandidates: Set<String>
+  private val addingEntities: Set<String>
 
   /**
-   * Get the locations that best represent the candidate entities given in a set.
-   *
-   * @param text the input text
-   * @param candidateEntities a set of entities found in a text, candidate as locations
-   * @param coordinateEntitiesGroups a list of groups of entities that are coordinate in the text
-   *
-   * @return a map that associates a location (or null if no one has been found) to each candidate
+   * Calculate scores and find best locations.
    */
-  fun getLocations(text: String,
-                   candidateEntities: Set<CandidateEntity>,
-                   coordinateEntitiesGroups: List<Set<String>>): Map<String, Location?> {
-
-    this.inputText = text
-    this.setCandidateLocations(candidateEntities)
-    this.setCoordinateEntitiesMap(coordinateEntitiesGroups)
+  init {
+    this.candidateLocationsMap = this.buildCandidateLocationsMap(candidateEntities)
+    this.coordinateEntitiesMap = this.buildCoordinateEntitiesMap(coordinateEntitiesGroups)
 
     // TODO: add this.solveAmbiguities()
 
-    this.setAddingCandidates()
+    this.addingEntities = this.buildAddingEntities()
     this.setScores()
 
-    TODO()
+    this.bestLocations = this.findBestLocations()
   }
 
   /**
-   * Set the current candidate locations.
+   * Build the candidate locations map.
    *
    * @param candidateEntities a set of candidate entities
+   *
+   * @return a map of entities names to extended locations
    */
-  private fun setCandidateLocations(candidateEntities: Set<CandidateEntity>) {
+  private fun buildCandidateLocationsMap(candidateEntities: Set<CandidateEntity>): Map<String, ExtendedLocation> {
 
     val entitiesNamesByLocId = mutableMapOf<String, MutableSet<CandidateEntity>>()
 
@@ -84,7 +87,7 @@ class LocationsFinder(private val dictionary: LocationsDictionary) {
       locations ?: listOf()
     }
 
-    this.candidateLocationsMap = candidateLocations.distinctBy { it.id }.associate {
+    return candidateLocations.distinctBy { it.id }.associate {
       it.id to this.buildExtendedLocation(location = it, entities = entitiesNamesByLocId.getValue(it.id))
     }
   }
@@ -106,11 +109,13 @@ class LocationsFinder(private val dictionary: LocationsDictionary) {
   }
 
   /**
-   * Set the coordinate entities map.
+   * Build the coordinate entities map.
    *
    * @param coordinateEntitiesGroups a list of groups of entities that are coordinate in the text
+   *
+   * @return a map of entities names to groups of coordinate entities in which they are involved
    */
-  private fun setCoordinateEntitiesMap(coordinateEntitiesGroups: List<Set<String>>) {
+  private fun buildCoordinateEntitiesMap(coordinateEntitiesGroups: List<Set<String>>): Map<String, List<Set<String>>> {
 
     val coordinateEntitiesMap = mutableMapOf<String, MutableList<Set<String>>>()
 
@@ -120,13 +125,15 @@ class LocationsFinder(private val dictionary: LocationsDictionary) {
       }
     }
 
-    this.coordinateEntitiesMap = coordinateEntitiesMap
+    return coordinateEntitiesMap
   }
 
   /**
-   * Set the adding candidates found in the input text, starting from adding entities taken from the parents labels.
+   * Build the adding candidates found in the input text, starting from adding entities taken from the parents labels.
+   *
+   * @return a set of adding candidate entities
    */
-  private fun setAddingCandidates() {
+  private fun buildAddingEntities(): Set<String> {
 
     // A set of parent location ids that are not in the candidateLocationsMap.
     val addingLocationIds: Set<String> =
@@ -135,7 +142,7 @@ class LocationsFinder(private val dictionary: LocationsDictionary) {
     // A set of adding entities that could be mentioned in the text.
     val addingEntities: Set<String> = addingLocationIds.flatMap { id -> this.dictionary.getValue(id).labels }.toSet()
 
-    this.addingCandidates = this.searchInText(entities = addingEntities) // TODO: differentiate between title and body?
+    return this.searchInText(entities = addingEntities) // TODO: differentiate between title and body?
   }
 
   /**
@@ -143,10 +150,10 @@ class LocationsFinder(private val dictionary: LocationsDictionary) {
    *
    * @param entities a set of entities
    *
-   * @return a set of candidates lower names found in the input text
+   * @return a set of entities lower names found in the input text
    */
   private fun searchInText(entities: Set<String>): Set<String> = entities.filter {
-    this.inputText.toLowerCase().findAnyOf(listOf(it)) != null
+    this.text.toLowerCase().findAnyOf(listOf(it)) != null
   }.toSet()
 
   /**
@@ -170,7 +177,7 @@ class LocationsFinder(private val dictionary: LocationsDictionary) {
     location.parents.forEach { parent ->
 
       this.candidateLocationsMap[parent.id]?.let { location.boostByParent(it) } ?:
-        location.boostByParentLabels(parent = parent, candidateNames = this.addingCandidates, rateFactor = 0.333)
+        location.boostByParentLabels(parent = parent, candidateNames = this.addingEntities, rateFactor = 0.333)
     }
   }
 
@@ -184,5 +191,14 @@ class LocationsFinder(private val dictionary: LocationsDictionary) {
     this.candidateLocationsMap.values
       .filter { it.isBrother(location) }
       .forEach { location.boostByBrother(brother = it, coordinateEntitiesMap = this.coordinateEntitiesMap) }
+  }
+
+  /**
+   * Find the location that best represent each input candidate entity.
+   *
+   * @return a map that associates a location (or null if no one has been found) to each candidate
+   */
+  private fun findBestLocations(): Map<String, ExtendedLocation?> {
+    TODO()
   }
 }
