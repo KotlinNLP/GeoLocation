@@ -15,8 +15,12 @@ import com.kotlinnlp.utils.getLinesCount
 
 /**
  * A dictionary containing locations organized in a hierarchy per type, such as continents, countries, cities, etc..
+ * It is loaded from a file in JSON line format (as explained in the resources `README.md` file).
+ *
+ * @param filename the name of the input file containing all the locations in JSON line format
+ * @param verbose whether to print the loading progress (default = true)
  */
-class LocationsDictionary {
+class LocationsDictionary(filename: String = defaultDictionaryPath, verbose: Boolean = true) {
 
   companion object {
 
@@ -30,28 +34,6 @@ class LocationsDictionary {
      * A set of location sub-types not valid to be inserted in the dictionary.
      */
     private val INVALID_SUB_TYPES = setOf("hamlet", "village")
-
-    /**
-     * Load a [LocationsDictionary] from a file in JSON line format (as explained in the resources `README.md` file).
-     *
-     * @param filename the name of the input file containing all the locations in JSON line format
-     *
-     * @return a new locations dictionary
-     */
-    fun load(filename: String = defaultDictionaryPath): LocationsDictionary {
-
-      val dictionary = LocationsDictionary()
-      val progress = ProgressIndicatorBar(total = getLinesCount(filename))
-
-      forEachLine(filename) {
-
-        progress.tick()
-
-        dictionary.addEntry(it)
-      }
-
-      return dictionary
-    }
   }
 
   /**
@@ -63,6 +45,21 @@ class LocationsDictionary {
    * The sets of locations associated by label.
    */
   private val encodedLocationsByLabel = mutableMapOf<String, MutableSet<Location>>()
+
+  /**
+   * Load the dictionary from file.
+   */
+  init {
+
+    val progress: ProgressIndicatorBar? = if (verbose) ProgressIndicatorBar(total = getLinesCount(filename)) else null
+
+    forEachLine(filename) {
+
+      progress?.tick()
+
+      this.addEntry(it)
+    }
+  }
 
   /**
    * Get a location by id.
