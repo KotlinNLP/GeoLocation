@@ -213,13 +213,15 @@ internal class LocationsFinder(
 
     this.normalizeScores(bestLocations)
 
-    return bestLocations
+    return bestLocations.sortedWith(
+      Comparator({ locA, locB -> if (locA.isMoreProbableThan(locB)) 1 else -1 })
+    )
   }
 
   /**
    * Find the locations that best represent each input candidate entity.
    *
-   * @return a list of the best extended locations found, sorted by descending importance
+   * @return a list of the best extended locations found
    */
   private fun findBestLocations(): List<ExtendedLocation> {
 
@@ -235,9 +237,7 @@ internal class LocationsFinder(
 
     this.setLocationsEntities(bestLocationsMap)
 
-    return bestLocationsMap.values.sortedWith(
-      Comparator({ locA, locB -> if (locA.isMoreProbableThan(locB)) 1 else -1 })
-    )
+    return bestLocationsMap.values.toList()
   }
 
   /**
