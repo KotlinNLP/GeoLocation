@@ -71,6 +71,7 @@ internal class LocationsFinder(
     this.setScores()
 
     this.bestLocations = this.findBestLocations()
+    ConfidenceHelper(this.bestLocations.values.filterNotNull()).setConfidences()
   }
 
   /**
