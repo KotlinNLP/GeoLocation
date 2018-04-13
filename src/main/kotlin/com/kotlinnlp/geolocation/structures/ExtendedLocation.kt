@@ -59,6 +59,11 @@ data class ExtendedLocation(
   private val entitiesScoresMap: Map<String, Double> = this.entities.associate { it.normName to it.score }
 
   /**
+   * @return a string representation of this class
+   */
+  override fun toString(): String = "[%.2f] %s".format(this.score, this.location)
+
+  /**
    * Boost the [score] of this location by a given [parent] and vice versa.
    *
    * @param parent the extended location of a parent of this [location]
