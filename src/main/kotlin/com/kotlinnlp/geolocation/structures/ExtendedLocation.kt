@@ -10,7 +10,7 @@ package com.kotlinnlp.geolocation.structures
 import java.lang.Double.max
 
 /**
- * A structure that extends a location with adding properties, such as [score] and [confidence].
+ * A structure that extends a location with adding properties, such as [score], [confidence] and [entities].
  *
  * @property location a location
  * @param parents the list of the [location] parents, in the same order of its 'parentIds' property
@@ -48,6 +48,12 @@ data class ExtendedLocation(
    * This score is calculated looking to the relations between this location and the others found in the input text.
    */
   var confidence: Double = 0.0
+    internal set
+
+  /**
+   * The list of entities names to which this locations has been associated.
+   */
+  lateinit var entities: List<String>
     internal set
 
   /**
