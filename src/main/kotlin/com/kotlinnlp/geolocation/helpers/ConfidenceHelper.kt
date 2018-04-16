@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.geolocation
+package com.kotlinnlp.geolocation.helpers
 
 import com.kotlinnlp.geolocation.structures.ExtendedLocation
 import com.kotlinnlp.geolocation.structures.Location

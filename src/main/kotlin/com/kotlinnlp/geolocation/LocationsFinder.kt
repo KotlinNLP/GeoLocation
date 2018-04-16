@@ -8,6 +8,10 @@
 package com.kotlinnlp.geolocation
 
 import com.kotlinnlp.geolocation.dictionary.LocationsDictionary
+import com.kotlinnlp.geolocation.helpers.ConfidenceHelper
+import com.kotlinnlp.geolocation.helpers.boostByBrother
+import com.kotlinnlp.geolocation.helpers.boostByParent
+import com.kotlinnlp.geolocation.helpers.boostByParentLabels
 import com.kotlinnlp.geolocation.structures.CandidateEntity
 import com.kotlinnlp.geolocation.structures.ExtendedLocation
 import com.kotlinnlp.geolocation.structures.Location
