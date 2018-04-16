@@ -50,6 +50,18 @@ data class ExtendedLocation(
     internal set
 
   /**
+   * The deviation of the [score] respect to the scores average of all the best locations found in the input text.
+   */
+  var scoreDeviation: Double = 0.0
+    internal set
+
+  /**
+   * The deviation of the [confidence] respect to the scores average of all the best locations found in the input text.
+   */
+  var confidenceDeviation: Double = 0.0
+    internal set
+
+  /**
    * The list of entities names to which this locations has been associated.
    */
   lateinit var entities: List<String>
