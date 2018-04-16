@@ -37,6 +37,7 @@ data class ExtendedLocation(
 
   /**
    * The score that indicates how much the location is relevant respect to the others in the text.
+   * It is a percentage distributed among all the locations found in a text.
    */
   var score: Double = this.initScore
     internal set
