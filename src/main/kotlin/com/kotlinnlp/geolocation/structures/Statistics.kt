@@ -21,7 +21,7 @@ data class Statistics(val score: Metrics, val confidence: Metrics) {
    * @property avg an average of values
    * @property variance the variance of values
    * @property stdDev the standard deviation of values
-   * @property stdDevPerc the standard deviation in percentage respect to the [avg]
+   * @property stdDevPerc the standard deviation as percentage of the [avg]
    */
   data class Metrics(val avg: Double, val variance: Double, val stdDev: Double, val stdDevPerc: Double) {
 
@@ -47,5 +47,9 @@ data class Statistics(val score: Metrics, val confidence: Metrics) {
           stdDevPerc = if (avg > 0) stdDev / avg else 0.0)
       }
     }
+
+    override fun toString(): String = "avg %.2f, var %.2f, std dev %.2f (%.1f%%)".format(
+      this.avg, this.variance, this.stdDev, this.stdDevPerc
+    )
   }
 }
