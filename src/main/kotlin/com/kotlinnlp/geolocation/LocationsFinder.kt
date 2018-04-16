@@ -84,6 +84,8 @@ class LocationsFinder(
       score = Statistics.Metrics(this.bestLocations.map { it.score }.toDoubleArray()),
       confidence = Statistics.Metrics(this.bestLocations.map { it.confidence }.toDoubleArray())
     )
+
+    this.setDeviations()
   }
 
   /**
@@ -280,5 +282,16 @@ class LocationsFinder(
     val scoresSum: Double = locations.sumByDouble { it.score }
 
     locations.forEach { it.score /= scoresSum }
+  }
+
+  /**
+   * Set the deviations of score and confidence of the [bestLocations].
+   */
+  private fun setDeviations() {
+
+    this.bestLocations.forEach {
+      it.scoreDeviation = it.score - this.stats.score.avg
+      it.confidenceDeviation = it.confidence - this.stats.confidence.avg
+    }
   }
 }
