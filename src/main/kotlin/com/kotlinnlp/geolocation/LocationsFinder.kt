@@ -15,13 +15,16 @@ import com.kotlinnlp.geolocation.helpers.boostByParentLabels
 import com.kotlinnlp.geolocation.structures.CandidateEntity
 import com.kotlinnlp.geolocation.structures.ExtendedLocation
 import com.kotlinnlp.geolocation.structures.Location
+import com.kotlinnlp.geolocation.structures.Statistics
 
 /**
  * The LocationsFinder searches for all the valid locations among a set of candidate entities found in a text, already
  * scored respect to semantic properties.
  *
- * A LocationsFinder is a standalone class, that must be instantiated for each input text and it makes available the
- * [bestLocations] property containing the best locations found.
+ * A LocationsFinder is a standalone class that must be instantiated for each input text and it makes available some
+ * properties:
+ *  - [bestLocations], that contains the best locations found
+ *  - [stats], that contains the global statistics of score and confidence of the best locations
  *
  * @param dictionary a dictionary containing all the locations that can be recognized
  * @param text the input text
@@ -39,6 +42,11 @@ internal class LocationsFinder(
    * The list of the best extended locations found, sorted by descending importance.
    */
   val bestLocations: List<ExtendedLocation>
+
+  /**
+   * Global statistics of score and confidence of the best locations.
+   */
+  val stats: Statistics
 
   /**
    * The map of entities to the groups of coordinate entities in which they are involved.
@@ -71,6 +79,11 @@ internal class LocationsFinder(
     this.setScores()
 
     this.bestLocations = this.buildBestLocations()
+
+    this.stats = Statistics(
+      score = Statistics.Metrics(this.bestLocations.map { it.score }.toDoubleArray()),
+      confidence = Statistics.Metrics(this.bestLocations.map { it.confidence }.toDoubleArray())
+    )
   }
 
   /**
