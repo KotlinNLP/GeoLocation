@@ -18,7 +18,7 @@ package com.kotlinnlp.geolocation.structures
 data class ExtendedLocation(
   val location: Location,
   internal val parents: List<Location>,
-  internal val candidateEntities: List<CandidateEntity>,
+  internal val candidateEntities: MutableList<CandidateEntity>,
   internal var initScore: Double
 ) {
 
