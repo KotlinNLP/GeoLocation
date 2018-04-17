@@ -8,10 +8,7 @@
 package com.kotlinnlp.geolocation
 
 import com.kotlinnlp.geolocation.dictionary.LocationsDictionary
-import com.kotlinnlp.geolocation.helpers.ConfidenceHelper
-import com.kotlinnlp.geolocation.helpers.boostByBrother
-import com.kotlinnlp.geolocation.helpers.boostByParent
-import com.kotlinnlp.geolocation.helpers.boostByParentLabels
+import com.kotlinnlp.geolocation.helpers.*
 import com.kotlinnlp.geolocation.structures.CandidateEntity
 import com.kotlinnlp.geolocation.structures.ExtendedLocation
 import com.kotlinnlp.geolocation.structures.Location
@@ -30,12 +27,14 @@ import com.kotlinnlp.geolocation.structures.Statistics
  * @param text the input text
  * @param candidateEntities a set of entities found in the [text], candidate as locations
  * @param coordinateEntitiesGroups a list of groups of entities that are coordinate in the text
+ * @param ambiguityGroups a list of ambiguity groups
  */
 class LocationsFinder(
   private val dictionary: LocationsDictionary,
   private val text: String,
   candidateEntities: Set<CandidateEntity>,
-  coordinateEntitiesGroups: List<Set<String>>
+  coordinateEntitiesGroups: List<Set<String>>,
+  ambiguityGroups: List<List<String>>
 ) {
 
   /**
@@ -54,9 +53,9 @@ class LocationsFinder(
   private val coordinateEntitiesMap: Map<String, List<Set<String>>>
 
   /**
-   * The map of current candidate locations associated by id.
+   * The map of candidate locations associated by id.
    */
-  private val candidateLocationsById: Map<String, ExtendedLocation>
+  private val candidateLocationsById: MutableMap<String, ExtendedLocation>
 
   /**
    * A set of adding candidates (taken from the parents labels) that are mentioned in the text.
@@ -71,9 +70,12 @@ class LocationsFinder(
 
     // Attention: the order of the operations is very important!
 
-    this.candidateLocationsById = this.buildCandidateLocationsById(candidateEntities)
+    this.candidateLocationsById = this.buildCandidateLocationsById(candidateEntities).toMutableMap()
+
+    AmbiguitiesHelper(this.candidateLocationsById).solveAmbiguities(
+      ambiguityGroups = ambiguityGroups.map { it.map { normalizeEntityName(it) } })
+
     this.coordinateEntitiesMap = this.buildCoordinateEntitiesMap(coordinateEntitiesGroups)
-    // TODO: add this.solveAmbiguities()
     this.addingEntities = this.buildAddingEntities()
 
     this.setScores()
@@ -96,7 +98,6 @@ class LocationsFinder(
    * @return a map of extended locations associated by id
    */
   private fun buildCandidateLocationsById(candidateEntities: Set<CandidateEntity>): Map<String, ExtendedLocation> {
-
     val entitiesNamesByLocId = mutableMapOf<String, MutableSet<CandidateEntity>>()
 
     val candidateLocations: List<Location> = candidateEntities.flatMap { entity ->
@@ -129,7 +130,7 @@ class LocationsFinder(
     return ExtendedLocation(
       location = location,
       parents = parents,
-      candidateEntities = entities.toList(),
+      candidateEntities = entities.toMutableList(),
       initScore = score
     )
   }
@@ -183,7 +184,7 @@ class LocationsFinder(
   }.toSet()
 
   /**
-   * Set the current candidates scores.
+   * Set the candidate locations scores.
    */
   private fun setScores() {
 
