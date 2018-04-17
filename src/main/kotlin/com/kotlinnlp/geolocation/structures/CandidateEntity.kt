@@ -7,6 +7,8 @@
 
 package com.kotlinnlp.geolocation.structures
 
+import com.kotlinnlp.geolocation.normalizeEntityName
+
 /**
  * A candidate location to give as input.
  *
@@ -18,7 +20,7 @@ data class CandidateEntity(val name: String, val score: Double) {
   /**
    * The normalized [name].
    */
-  val normName: String = this.name.trim().toLowerCase()
+  val normName: String = normalizeEntityName(this.name)
 
   /**
    * @return the hash code for this class, based on the [normName]
