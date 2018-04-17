@@ -146,8 +146,8 @@ class LocationsFinder(
     val coordinateEntitiesMap = mutableMapOf<String, MutableList<Set<String>>>()
 
     coordinateEntitiesGroups.forEach { entitiesGroup ->
-      entitiesGroup.forEach { entity ->
-        coordinateEntitiesMap.getOrPut(entity) { mutableListOf() }.add(entitiesGroup)
+      entitiesGroup.forEach { entityName ->
+        coordinateEntitiesMap.getOrPut(normalizeEntityName(entityName)) { mutableListOf() }.add(entitiesGroup)
       }
     }
 
