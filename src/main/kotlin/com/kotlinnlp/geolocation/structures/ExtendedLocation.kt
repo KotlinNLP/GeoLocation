@@ -63,6 +63,7 @@ data class ExtendedLocation(
 
   /**
    * The strength of the country of this location within the text (based on the other locations of the same country).
+   * It has a meaning for locations of type 'Country' or locations that are inside a country.
    */
   var countryStrength: Double = 0.0
     internal set
