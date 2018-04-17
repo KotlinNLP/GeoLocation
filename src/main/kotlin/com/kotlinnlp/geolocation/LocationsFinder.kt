@@ -248,8 +248,8 @@ class LocationsFinder(
 
     this.candidateLocationsById.values.forEach { location ->
       location.candidateEntities.forEach { entity ->
-        bestLocationsMap[entity.name].let { bestLoc ->
-          if (bestLoc == null || location.isMoreProbableThan(bestLoc)) bestLocationsMap[entity.name] = location
+        bestLocationsMap[entity.normName].let { bestLoc ->
+          if (bestLoc == null || location.isMoreProbableThan(bestLoc)) bestLocationsMap[entity.normName] = location
         }
       }
     }
