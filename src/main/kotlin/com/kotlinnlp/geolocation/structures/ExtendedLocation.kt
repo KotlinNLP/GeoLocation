@@ -19,7 +19,7 @@ data class ExtendedLocation(
   val location: Location,
   internal val parents: List<Location>,
   internal val candidateEntities: List<CandidateEntity>,
-  internal val initScore: Double
+  internal var initScore: Double
 ) {
 
   /**
@@ -109,6 +109,17 @@ data class ExtendedLocation(
     if (location.id != other.location.id) return false
 
     return true
+  }
+
+  /**
+   * Update the [initScore] and the [score] of this location.
+   *
+   * @param newScore the new score that replaces the [initScore] and the [score]
+   */
+  internal fun updateInitScore(newScore: Double) {
+
+    this.initScore = newScore
+    this.score = newScore
   }
 
   /**
