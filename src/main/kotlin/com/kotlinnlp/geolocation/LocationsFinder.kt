@@ -168,17 +168,17 @@ class LocationsFinder(
     // A set of adding entities that could be mentioned in the text.
     val addingEntities: Set<String> = addingLocationIds.flatMap { id -> this.dictionary.getValue(id).labels }.toSet()
 
-    return this.searchInText(entities = addingEntities) // TODO: differentiate between title and body?
+    return this.searchInText(entitiesNames = addingEntities) // TODO: differentiate between title and body?
   }
 
   /**
    * Search entities in the input text that match a set of given entities.
    *
-   * @param entities a set of entities
+   * @param entitiesNames a set of entities names (already normalized)
    *
    * @return a set of entities lower names found in the input text
    */
-  private fun searchInText(entities: Set<String>): Set<String> = entities.filter {
+  private fun searchInText(entitiesNames: Set<String>): Set<String> = entitiesNames.filter {
     this.text.toLowerCase().findAnyOf(listOf(it)) != null
   }.toSet()
 
