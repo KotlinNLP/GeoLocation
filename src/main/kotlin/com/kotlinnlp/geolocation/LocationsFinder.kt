@@ -48,11 +48,6 @@ class LocationsFinder(
   val stats: Statistics
 
   /**
-   * The map of entities to the groups of coordinate entities in which they are involved.
-   */
-  private val coordinateEntitiesMap: Map<String, List<Set<String>>>
-
-  /**
    * The map of candidate locations associated by id.
    */
   private val candidateLocationsById: MutableMap<String, ExtendedLocation>
@@ -64,18 +59,23 @@ class LocationsFinder(
   private val addingEntities: Set<String>
 
   /**
+   * The map of entities to the groups of coordinate entities in which they are involved.
+   */
+  private val coordinateEntitiesMap: Map<String, List<Set<String>>> =
+    this.buildCoordinateEntitiesMap(coordinateEntitiesGroups)
+
+  /**
    * Calculate scores and find best locations.
    */
   init {
 
-    // Attention: the order of the operations is very important!
+    // Attention: the order of the following operations is very important!
 
     this.candidateLocationsById = this.buildCandidateLocationsById(candidateEntities).toMutableMap()
 
     AmbiguitiesHelper(this.candidateLocationsById).solveAmbiguities(
       ambiguityGroups = ambiguityGroups.map { it.map { normalizeEntityName(it) } })
 
-    this.coordinateEntitiesMap = this.buildCoordinateEntitiesMap(coordinateEntitiesGroups)
     this.addingEntities = this.buildAddingEntities()
 
     this.setScores()
