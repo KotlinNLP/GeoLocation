@@ -19,6 +19,7 @@ import com.kotlinnlp.geolocation.structures.ExtendedLocation
  * @param text the input text
  * @param candidateEntities a set of entities found in the [text], candidate as locations
  * @param coordinateEntitiesGroups a list of groups of entities that are coordinate in the text
+ * @param ambiguityGroups a list of ambiguity groups
  *
  * @return a list of the best extended locations found, sorted by descending importance
  */
@@ -26,11 +27,13 @@ fun findLocations(
   dictionary: LocationsDictionary,
   text: String,
   candidateEntities: Set<CandidateEntity>,
-  coordinateEntitiesGroups: List<Set<String>>
+  coordinateEntitiesGroups: List<Set<String>>,
+  ambiguityGroups: List<List<String>>
 ): List<ExtendedLocation> =
   LocationsFinder(
     dictionary = dictionary,
     text = text,
     candidateEntities = candidateEntities,
-    coordinateEntitiesGroups = coordinateEntitiesGroups
+    coordinateEntitiesGroups = coordinateEntitiesGroups,
+    ambiguityGroups = ambiguityGroups
   ).bestLocations
