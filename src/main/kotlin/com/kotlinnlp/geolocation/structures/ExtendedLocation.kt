@@ -90,6 +90,28 @@ data class ExtendedLocation(
   override fun toString(): String = "[%.2f, %.2f] %s".format(this.score, this.confidence, this.location)
 
   /**
+   * @return the hash code of this extended location
+   */
+  override fun hashCode(): Int = this.location.id.hashCode()
+
+  /**
+   * @param other another object
+   *
+   * @return whether this extended location is equal to [other]
+   */
+  override fun equals(other: Any?): Boolean {
+
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as ExtendedLocation
+
+    if (location.id != other.location.id) return false
+
+    return true
+  }
+
+  /**
    * Whether this location is a brother of another (they have the same hierarchic upper level or they are analogous
    * cities of the same country).
    *
