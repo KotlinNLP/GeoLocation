@@ -88,6 +88,7 @@ class LocationsFinder(
     )
 
     this.setDeviations()
+    this.setCountriesStrength()
   }
 
   /**
@@ -294,5 +295,19 @@ class LocationsFinder(
       it.scoreDeviation = it.score - this.stats.score.avg
       it.confidenceDeviation = it.confidence - this.stats.confidence.avg
     }
+  }
+
+  /**
+   * Set the 'countryStrength' property of the [bestLocations].
+   */
+  private fun setCountriesStrength() {
+
+    val locationsInsideCountry: List<ExtendedLocation> = this.bestLocations.filter { it.location.isInsideCountry }
+
+    val countryIdsToStrength: Map<String, Double> = locationsInsideCountry
+      .groupBy { it.location.countryId!! }.entries
+      .associateTo(mutableMapOf()) { it.key to it.value.map { it.score }.average() }
+
+    locationsInsideCountry.forEach { it.countryStrength = countryIdsToStrength.getValue(it.location.countryId!!) }
   }
 }
