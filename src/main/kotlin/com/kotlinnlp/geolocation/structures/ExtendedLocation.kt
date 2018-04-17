@@ -93,7 +93,8 @@ data class ExtendedLocation(
   /**
    * @return a string representation of this class
    */
-  override fun toString(): String = "[%.2f, %.2f] %s".format(this.score, this.confidence, this.location)
+  override fun toString(): String =
+    "[%.2f, %.2f, %.2f] %s".format(this.score, this.confidence, this.countryStrength, this.location)
 
   /**
    * @return the hash code of this extended location
