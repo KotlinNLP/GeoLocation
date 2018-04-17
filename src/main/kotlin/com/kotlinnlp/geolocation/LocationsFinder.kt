@@ -302,12 +302,15 @@ class LocationsFinder(
    */
   private fun setCountriesStrength() {
 
-    val locationsInsideCountry: List<ExtendedLocation> = this.bestLocations.filter { it.location.isInsideCountry }
+    val locationsWithCountry: List<ExtendedLocation> =
+      this.bestLocations.filter { it.location.let { it.isInsideCountry || it.isCountry } }
 
-    val countryIdsToStrength: Map<String, Double> = locationsInsideCountry
-      .groupBy { it.location.countryId!! }.entries
+    val countryIdsToStrength: Map<String, Double> = locationsWithCountry
+      .groupBy { it.location.let { it.countryId ?: it.id } }.entries
       .associateTo(mutableMapOf()) { it.key to it.value.map { it.score }.average() }
 
-    locationsInsideCountry.forEach { it.countryStrength = countryIdsToStrength.getValue(it.location.countryId!!) }
+    locationsWithCountry.forEach {
+      it.countryStrength = countryIdsToStrength.getValue(it.location.let { it.countryId ?: it.id })
+    }
   }
 }
