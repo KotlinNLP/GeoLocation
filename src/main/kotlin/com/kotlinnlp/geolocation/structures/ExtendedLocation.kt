@@ -62,6 +62,12 @@ data class ExtendedLocation(
     internal set
 
   /**
+   * The strength of the country of this location within the text (based on the other locations of the same country).
+   */
+  var countryStrength: Double = 0.0
+    internal set
+
+  /**
    * The list of entities names to which this locations has been associated.
    */
   lateinit var entities: List<String>
