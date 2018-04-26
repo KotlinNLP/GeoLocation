@@ -30,21 +30,24 @@ internal object LocationBuilder {
    * @return a new location
    */
   fun buildLocation(properties: String): Location = decodeProperties(properties).let {
+
+    val iter: Iterator<*> = it.iterator()
+
     Location(
-      id = (it[0] as String).toUpperCase(),
-      iso = it[1] as? String,
-      subType = it[2] as? String,
-      name = it[3] as String,
-      translations = buildTranslations(translations = it.subList(4, 10)),
-      otherNames = it[10]?.toStringList(),
-      demonym = it[11] as? String,
-      coords = buildCoordinates(lat = it[12] as? Double, lon = it[13] as? Double),
-      borders = it[14]?.toStringList(),
-      isCapital = it[15] as? Boolean,
-      area = it[16] as? Int,
-      population = it[17] as? Int,
-      languages = it[18]?.toStringList(),
-      contexts = it[19]?.let { buildContexts(it as List<*>) }
+      id = (iter.next() as String).toUpperCase(),
+      iso = iter.next() as? String,
+      subType = iter.next() as? String,
+      name = iter.next() as String,
+      translations = buildTranslations(translations = (0 until 6).map { iter.next() }),
+      otherNames = iter.next()?.toStringList(),
+      demonym = iter.next() as? String,
+      coords = buildCoordinates(lat = iter.next() as? Double, lon = iter.next() as? Double),
+      borders = iter.next()?.toStringList(),
+      isCapital = iter.next() as? Boolean,
+      area = iter.next() as? Int,
+      population = iter.next() as? Int,
+      languages = iter.next()?.toStringList(),
+      contexts = iter.next()?.let { buildContexts(it as List<*>) }
     )
   }
 
