@@ -35,10 +35,10 @@ internal object LocationBuilder {
       iso = it[1] as? String,
       subType = it[2] as? String,
       name = it[3] as String,
-      translations = buildTranslations(it),
+      translations = buildTranslations(translations = it.subList(4, 10)),
       otherNames = it[10]?.toStringList(),
       demonym = it[11] as? String,
-      coords = buildCoordinates(it),
+      coords = buildCoordinates(lat = it[12] as? Double, lon = it[13] as? Double),
       borders = it[14]?.toStringList(),
       isCapital = it[15] as? Boolean,
       area = it[16] as? Int,
@@ -59,36 +59,37 @@ internal object LocationBuilder {
     jsonParser.parse(StringBuilder(jsonLocation)) as JsonArray<*>
 
   /**
-   * Build the name translations of a location given the list of its properties.
+   * Build the name translations of a location.
    *
-   * @param properties the list of location properties
+   * @param translations the list of translations
    *
-   * @return a new translations object or null if no translations are defined in the given [properties]
+   * @return a new translations object or null if no translation is defined
    */
-  private fun buildTranslations(properties: List<*>): Location.Translations? =
-    if (properties.subList(4, 10).any { it != null })
+  private fun buildTranslations(translations: List<*>): Location.Translations? =
+    if (translations.any { it != null })
       Location.Translations(
-        en = properties[4] as? String,
-        it = properties[5] as? String,
-        de = properties[6] as? String,
-        es = properties[7] as? String,
-        fr = properties[8] as? String,
-        ar = properties[9] as? String
+        en = translations[0] as? String,
+        it = translations[1] as? String,
+        de = translations[2] as? String,
+        es = translations[3] as? String,
+        fr = translations[4] as? String,
+        ar = translations[5] as? String
       )
     else
       null
 
   /**
-   * Build the coordinates of a location given the list of its properties.
+   * Build the coordinates of a location.
    *
-   * @param properties the list of location properties
+   * @param lat the latitude (can be null)
+   * @param lon the longitude (can be null)
    *
-   * @return a new coordinates object or null if no coordinates are defined in the given [properties]
+   * @return a new coordinates object or null if coordinates are not defined
    */
-  private fun buildCoordinates(properties: List<*>): Location.Coordinates? =
-    properties[12]?.let {
-      require(properties[13] != null) { "Invalid format: if 'lat' is not null also 'lon' must be not null." }
-      Location.Coordinates(lat = it as Double, lon = properties[13] as Double)
+  private fun buildCoordinates(lat: Double?, lon: Double?): Location.Coordinates? =
+    lat?.let {
+      require(lon != null) { "Invalid format: if 'lat' is not null also 'lon' must be not null." }
+      Location.Coordinates(lat = it, lon = lon!!)
     }
 
   /**
