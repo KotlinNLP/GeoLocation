@@ -35,11 +35,6 @@ class LocationsDictionary(filename: String, verbose: Boolean = true) : Serializa
     private const val serialVersionUID: Long = 1L
 
     /**
-     * A set of location sub-types not valid to be inserted in the dictionary.
-     */
-    private val INVALID_SUB_TYPES = setOf("hamlet", "village")
-
-    /**
      * Read a [LocationsDictionary] (serialized) from an input stream and decode it.
      *
      * @param inputStream the [InputStream] from which to read the serialized [LocationsDictionary]
@@ -119,8 +114,7 @@ class LocationsDictionary(filename: String, verbose: Boolean = true) : Serializa
 
     LocationBuilder.decodeProperties(jsonLocation).let { properties ->
 
-      // ensure that the sub-type is valid and the name is not null
-      if (properties[2] !in INVALID_SUB_TYPES && properties[3] != null) {
+      if (LocationBuilder.isValidLocation(properties)) {
 
         val location: Location = LocationBuilder.buildLocation(jsonLocation)
 

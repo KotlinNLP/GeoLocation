@@ -7,7 +7,6 @@
 
 package com.kotlinnlp.geolocation.dictionary
 
-import com.beust.klaxon.JsonArray
 import com.beust.klaxon.Parser
 import com.kotlinnlp.geolocation.structures.Location
 
@@ -17,9 +16,23 @@ import com.kotlinnlp.geolocation.structures.Location
 internal object LocationBuilder {
 
   /**
+   * A set of location sub-types not valid to be built.
+   */
+  private val INVALID_SUB_TYPES = setOf("hamlet", "village")
+
+  /**
    * A JSON parser.
    */
   private val jsonParser = Parser()
+
+  /**
+   * Whether a location is valid to be built: ensure that the sub-type is valid and the name is not null.
+   *
+   * @param properties the properties list of a location
+   *
+   * @return a boolean indicating if the location is valid to be built
+   */
+  fun isValidLocation(properties: List<*>): Boolean = properties[3] !in INVALID_SUB_TYPES && properties[4] != null
 
   /**
    * Build a location, given a string containing its properties as JSON list (as explained in the resources
@@ -35,6 +48,7 @@ internal object LocationBuilder {
 
     Location(
       id = (iter.next() as String).toUpperCase(),
+      unlocode = (iter.next() as? String)?.toUpperCase(),
       iso = iter.next() as? String,
       subType = iter.next() as? String,
       name = iter.next() as String,
@@ -56,10 +70,9 @@ internal object LocationBuilder {
    *
    * @param jsonLocation the properties representing a location, encoded as JSON list
    *
-   * @return a JSON array of location properties
+   * @return a list of location properties
    */
-  fun decodeProperties(jsonLocation: String): JsonArray<*> =
-    jsonParser.parse(StringBuilder(jsonLocation)) as JsonArray<*>
+  fun decodeProperties(jsonLocation: String): List<*> = jsonParser.parse(StringBuilder(jsonLocation)) as List<*>
 
   /**
    * Build the name translations of a location.
