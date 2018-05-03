@@ -17,7 +17,7 @@ import java.io.Serializable
  * @property iso the ISO 3166-1 alpha-2 code of a country (can be null)
  * @property subType the sub-type (can be null)
  * @property name the name
- * @property translations a name translations object (can be null)
+ * @property translations a map of name translations associated by language ISO code (can be null)
  * @property otherNames a list of other possible names (can be null)
  * @property demonym the demonym (can be null)
  * @property coords the coordinates (can be null)
@@ -34,7 +34,7 @@ data class Location(
   val iso: String? = null,
   val subType: String? = null,
   val name: String,
-  val translations: Translations? = null,
+  val translations: Map<LanguageISOCode, String>? = null,
   val otherNames: List<String>? = null,
   val demonym: String? = null,
   val coords: Coordinates? = null,
@@ -59,40 +59,6 @@ data class Location(
    * The location type.
    */
   enum class Type { City, AdminArea1, AdminArea2, Country, Region, Continent }
-
-  /**
-   * The [name] translations.
-   *
-   * @property en the English name
-   * @property ar the Arabic name
-   * @property it the Italian name
-   * @property de the German name
-   * @property es the Spanish name
-   * @property fr the French name
-   */
-  data class Translations(
-    val en: String?,
-    val ar: String?,
-    val it: String?,
-    val de: String?,
-    val es: String?,
-    val fr: String?
-  ) : Serializable {
-
-    companion object {
-
-      /**
-       * Private val used to serialize the class (needed by Serializable).
-       */
-      @Suppress("unused")
-      private const val serialVersionUID: Long = 1L
-    }
-
-    /**
-     * The list of not null translations.
-     */
-    val list: List<String> by lazy { listOfNotNull(this.en, this.ar, this.it, this.de, this.es, this.fr) }
-  }
 
   /**
    * The coordinates.
@@ -269,7 +235,7 @@ data class Location(
 
     val labels: MutableSet<String> = mutableSetOf(this.name.toLowerString())
 
-    this.translations?.list?.forEach { labels.add(it.toLowerString()) }
+    this.translations?.values?.forEach { labels.add(it.toLowerString()) }
     this.otherNames?.forEach { labels.add(it.toLowerString()) }
 
     return labels
