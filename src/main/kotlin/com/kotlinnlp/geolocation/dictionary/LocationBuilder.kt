@@ -8,6 +8,7 @@
 package com.kotlinnlp.geolocation.dictionary
 
 import com.beust.klaxon.Parser
+import com.kotlinnlp.geolocation.structures.LanguageISOCode
 import com.kotlinnlp.geolocation.structures.Location
 
 /**
@@ -24,6 +25,11 @@ internal object LocationBuilder {
    * A JSON parser.
    */
   private val jsonParser = Parser()
+
+  /**
+   * A set of valid language ISO codes (upper case).
+   */
+  private val validLanguageISOCodes: Set<String> = LanguageISOCode.values().map { it.toString().toUpperCase() }.toSet()
 
   /**
    * Whether a location is valid to be built: ensure that the sub-type is valid and the name is not null.
@@ -46,13 +52,14 @@ internal object LocationBuilder {
 
     val iter: Iterator<*> = it.iterator()
 
+    @Suppress("UNCHECKED_CAST")
     Location(
       id = (iter.next() as String).toUpperCase(),
       unlocode = (iter.next() as? String)?.toUpperCase(),
       iso = iter.next() as? String,
       subType = iter.next() as? String,
       name = iter.next() as String,
-      translations = buildTranslations(translations = (0 until 6).map { iter.next() }),
+      translations = iter.next()?.let { buildTranslations(it as Map<String, String>) },
       otherNames = iter.next()?.toStringList(),
       demonym = iter.next() as? String,
       coords = buildCoordinates(lat = iter.next() as? Double, lon = iter.next() as? Double),
@@ -77,22 +84,24 @@ internal object LocationBuilder {
   /**
    * Build the name translations of a location.
    *
-   * @param translations the list of translations
+   * @param translations a map of name translations associated by language ISO code
    *
-   * @return a new translations object or null if no translation is defined
+   * @return a new translations map or null if no valid translation has been found
    */
-  private fun buildTranslations(translations: List<*>): Location.Translations? =
-    if (translations.any { it != null })
-      Location.Translations(
-        en = translations[0] as? String,
-        it = translations[1] as? String,
-        de = translations[2] as? String,
-        es = translations[3] as? String,
-        fr = translations[4] as? String,
-        ar = translations[5] as? String
-      )
-    else
-      null
+  private fun buildTranslations(translations: Map<String, String>): Map<LanguageISOCode, String>? {
+
+    val translationsUpper: Map<String, String> = translations.mapKeys { it.key.toUpperCase() }
+    val validLangCodes: Set<String> = translationsUpper.keys.intersect(this.validLanguageISOCodes)
+
+    val validTranslations: Map<LanguageISOCode, String> = validLangCodes.associate {
+      LanguageISOCode.valueOf(it) to translationsUpper.getValue(it)
+    }
+
+    translationsUpper.keys.subtract(validLangCodes).forEach { println("[WARNING] Invalid language ISO code: $it") }
+
+    return if (validTranslations.isNotEmpty()) validTranslations else null
+  }
+
 
   /**
    * Build the coordinates of a location.
