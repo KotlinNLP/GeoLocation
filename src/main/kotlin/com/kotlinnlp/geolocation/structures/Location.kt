@@ -7,6 +7,8 @@
 
 package com.kotlinnlp.geolocation.structures
 
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.json
 import java.io.Serializable
 
 /**
@@ -211,6 +213,18 @@ data class Location(
    * Whether this location is inside an admin area 1.
    */
   val isInsideAdminArea1: Boolean by lazy { this.type == Type.City && !this.allIdZeros(6 until 9) }
+
+  /**
+   * @return the JSON object that represents this location
+   */
+  fun toJSON(): JsonObject = json {
+    obj(
+      "name" to this@Location.name,
+      "type" to this@Location.type.toString(),
+      "lat" to this@Location.coords?.lat,
+      "lon" to this@Location.coords?.lon
+    )
+  }
 
   /**
    * Build the type of this location deducing it from the [id].
