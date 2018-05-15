@@ -97,6 +97,17 @@ data class Location(
       @Suppress("unused")
       private const val serialVersionUID: Long = 1L
     }
+
+    /**
+     * @return the JSON object that represents this alternative division
+     */
+    fun toJSON(): JsonObject = json {
+      obj(
+        "type" to this@AlternativeDivision.type,
+        "name" to this@AlternativeDivision.name,
+        "level" to this@AlternativeDivision.level
+      )
+    }
   }
 
   /**
@@ -219,10 +230,31 @@ data class Location(
    */
   fun toJSON(): JsonObject = json {
     obj(
-      "name" to this@Location.name,
+      "id" to this@Location.id,
+      "unlocode" to this@Location.unlocode,
+      "isoA2" to this@Location.isoA2,
       "type" to this@Location.type.toString(),
-      "lat" to this@Location.coords?.lat,
-      "lon" to this@Location.coords?.lon
+      "subType" to this@Location.subType,
+      "name" to this@Location.name,
+      "labels" to array(this@Location.labels.toList()),
+      "translations" to this@Location.translations?.mapKeys { it.key.annotation }?.let { JsonObject(it) },
+      "isCapital" to this@Location.isCapital,
+      "demonym" to this@Location.demonym,
+      "area" to this@Location.area,
+      "population" to this@Location.population,
+      "languages" to this@Location.languages?.let { array(it) },
+      "borders" to this@Location.borders?.let{ array(it) },
+      "altDivisions" to this@Location.altDivisions?.let{ array(it.map { it.toJSON() }) },
+      "coords" to obj(
+        "lat" to this@Location.coords?.lat,
+        "lon" to this@Location.coords?.lon
+      ),
+      "parentIds" to obj(
+        "adminArea1" to this@Location.adminArea1Id,
+        "adminArea2" to this@Location.adminArea2Id,
+        "country" to this@Location.countryId,
+        "continent" to this@Location.continentId
+      )
     )
   }
 
