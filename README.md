@@ -23,6 +23,13 @@ Download a serialized a model of the `LocationsDictionary`
 [here](https://drive.google.com/open?id=1ZX9xWmb4lADqcaDVmii4HN168Itf0Lmc).
 
 
+### Note
+
+All the cities of our model are taken from the [OpenStreetMap](https://www.openstreetmap.org "OpenStreetMap web site") 
+database. If you need to go back to the original locations you can find a mapping between our ids and OSM ones 
+[here](https://drive.google.com/open?id=1_zW5F1DG-f2YpHdP51BkxM6drUergC0C).
+
+
 ## The locations JSON line file
 
 A JSON line file, with a location for each line. 
