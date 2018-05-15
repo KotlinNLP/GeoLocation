@@ -68,7 +68,7 @@ internal object LocationBuilder {
       area = iter.next() as? Int,
       population = iter.next() as? Int,
       languages = iter.next()?.toStringList(),
-      contexts = iter.next()?.let { buildContexts(it as List<*>) }
+      altDivisions = iter.next()?.let { buildAltDivisions(it as List<*>) }
     )
   }
 
@@ -118,15 +118,15 @@ internal object LocationBuilder {
     }
 
   /**
-   * Build the contexts of a location given the list of its context objects.
+   * Build the alternative divisions of a location given the list of its context objects.
    *
-   * @param contexts the list of context objects of a location
+   * @param altDivisions the list of alternative division objects of a location
    *
-   * @return a new contexts list
+   * @return a new list of alternative divisions
    */
-  private fun buildContexts(contexts: List<*>): List<Location.Context> =
-    contexts.map { it as List<*>
-      Location.Context(type = it[0] as String, name = it[1] as String, level = it[2] as Int)
+  private fun buildAltDivisions(altDivisions: List<*>): List<Location.AlternativeDivision> =
+    altDivisions.map { it as List<*>
+      Location.AlternativeDivision(type = it[0] as String, name = it[1] as String, level = it[2] as Int)
     }
 
   /**

@@ -28,7 +28,7 @@ import java.io.Serializable
  * @property area the area in km^2 (can be null)
  * @property population the population (can be null)
  * @property languages a list of spoken languages (can be null)
- * @property contexts a list of contexts (can be null)
+ * @property altDivisions a list of alternative divisions (can be null)
  */
 data class Location(
   val id: String,
@@ -45,7 +45,7 @@ data class Location(
   val area: Int? = null,
   val population: Int? = null,
   val languages: List<String>? = null,
-  val contexts: List<Context>? = null
+  val altDivisions: List<AlternativeDivision>? = null
 ) : Serializable {
 
   companion object {
@@ -81,13 +81,13 @@ data class Location(
   }
 
   /**
-   * An adding context.
+   * An alternative division of the location.
    *
    * @property type the type
    * @property name the name
-   * @property level the hierarchic level (useful in case of more contexts)
+   * @property level the hierarchic level (useful in case of more divisions)
    */
-  data class Context(val type: String, val name: String, val level: Int) : Serializable {
+  data class AlternativeDivision(val type: String, val name: String, val level: Int) : Serializable {
 
     companion object {
 

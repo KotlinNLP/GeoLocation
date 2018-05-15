@@ -91,8 +91,9 @@ It contains a list of the adjacent countries ids.
 The population.
 14. `languages`: List of String, nullable. Defined only for some locations of type 'country' and 'admin_area_1'. 
 The ISO 639-1 codes of the languages spoken in the location.
-15. `contexts`: List of List, nullable. Defined only for some locations of type 'city'. 
-It is a list of contexts, containing in turn `type` (String), `name` (String) and `level` (Int), in this order.
+15. `altDivisions`: List of List, nullable. Defined only for some locations of type 'city'. 
+It is a list of alternative divisions, containing in turn `type` (String), `name` (String) and `level` (Int), in this 
+order.
 
 ### Location ID
 
