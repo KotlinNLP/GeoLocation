@@ -10,6 +10,8 @@ import com.kotlinnlp.geolocation.dictionary.LocationsDictionary
 import com.kotlinnlp.geolocation.structures.CandidateEntity
 import com.kotlinnlp.geolocation.structures.ExtendedLocation
 import com.kotlinnlp.geolocation.structures.Statistics
+import com.kotlinnlp.neuraltokenizer.NeuralTokenizer
+import com.kotlinnlp.neuraltokenizer.NeuralTokenizerModel
 import com.kotlinnlp.utils.Timer
 import java.io.File
 import java.io.FileInputStream
@@ -19,13 +21,15 @@ import java.io.FileInputStream
  *
  * Command line arguments:
  *  1. The path of the serialized locations dictionary.
+ *  2. The serialized model of the neural tokenizer.
  */
 fun main(args: Array<String>) {
 
-  require(args.size == 1) { "Required 1 argument: <locations_dictionary_path>." }
+  require(args.size == 2) { "Required 2 arguments: <locations_dictionary_path> <tokenizer_model_filename>." }
 
   val dictionary: LocationsDictionary = loadDictionary(path = args[0])
-  val finder: LocationsFinder = findLocations(dictionary)
+  val tokenizer: NeuralTokenizer = loadTokenizer(modelFilename = args[1])
+  val finder: LocationsFinder = findLocations(dictionary = dictionary, tokenizer = tokenizer)
 
   println("\nLOCATIONS")
   printLocations(finder.bestLocations)
@@ -57,22 +61,38 @@ private fun loadDictionary(path: String): LocationsDictionary {
 }
 
 /**
+ * Build a [NeuralTokenizer] loading its serialized model from file.
+ *
+ * @param modelFilename the filename of the neural tokenizer model
+ *
+ * @return a neural tokenizer
+ */
+private fun loadTokenizer(modelFilename: String): NeuralTokenizer {
+
+  println("Loading tokenizer model from '$modelFilename'...")
+
+  return NeuralTokenizer(model = NeuralTokenizerModel.load(FileInputStream(File(modelFilename))))
+}
+
+/**
  * Find locations in an example text.
  *
  * @param dictionary the locations dictionary
+ * @param tokenizer the neural tokenizer
  *
  * @return a locations finder instantiated for the example text
  */
-private fun findLocations(dictionary: LocationsDictionary): LocationsFinder {
+private fun findLocations(dictionary: LocationsDictionary, tokenizer: NeuralTokenizer): LocationsFinder {
 
   val timer = Timer()
+  val text = """The crime rate is very high in the following cities of the United States of America: Los Angeles,
+    ||New York and Philadelphia.""".trimMargin()
 
   println("\nSearching for locations...")
 
   val finder = LocationsFinder(
     dictionary = dictionary,
-    text = """The crime rate is very high in the following cities of the United States of America: Los Angeles,
-      |New York and Philadelphia.""".trimMargin(),
+    textTokens = tokenizer.tokenize(text).flatMap { it.tokens.map { it.form } },
     candidateEntities = setOf(
       CandidateEntity(name = "Los Angeles", score = 0.4),
       CandidateEntity(name = "New York", score = 0.6),
