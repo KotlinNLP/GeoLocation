@@ -16,8 +16,8 @@ import com.kotlinnlp.geolocation.structures.ExtendedLocation
  * semantic properties.
  *
  * @param dictionary a dictionary containing all the locations that can be recognized
- * @param text the input text
- * @param candidateEntities a set of entities found in the [text], candidate as locations
+ * @param textTokens the list of tokens forms that compose the input text
+ * @param candidateEntities a set of entities found among the [textTokens], candidate as locations
  * @param coordinateEntitiesGroups a list of groups of entities that are coordinate in the text
  * @param ambiguityGroups a list of ambiguity groups
  *
@@ -25,14 +25,14 @@ import com.kotlinnlp.geolocation.structures.ExtendedLocation
  */
 fun findLocations(
   dictionary: LocationsDictionary,
-  text: String,
+  textTokens: List<String>,
   candidateEntities: Set<CandidateEntity>,
   coordinateEntitiesGroups: List<Set<String>>,
   ambiguityGroups: List<List<String>>
 ): List<ExtendedLocation> =
   LocationsFinder(
     dictionary = dictionary,
-    text = text,
+    textTokens = textTokens,
     candidateEntities = candidateEntities,
     coordinateEntitiesGroups = coordinateEntitiesGroups,
     ambiguityGroups = ambiguityGroups
