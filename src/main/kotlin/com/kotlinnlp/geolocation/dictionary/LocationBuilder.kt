@@ -56,7 +56,7 @@ internal object LocationBuilder {
     Location(
       id = (iter.next() as String).toUpperCase(),
       unlocode = (iter.next() as? String)?.toUpperCase(),
-      iso = iter.next() as? String,
+      isoA2 = iter.next() as? String,
       subType = iter.next() as? String,
       name = iter.next() as String,
       translations = iter.next()?.let { buildTranslations(it as Map<String, String>) },

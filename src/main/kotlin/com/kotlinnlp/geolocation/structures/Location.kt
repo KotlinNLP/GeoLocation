@@ -16,7 +16,7 @@ import java.io.Serializable
  *
  * @property id the unique location id
  * @property unlocode the United Nations Code for Trade and Transport Locations (UN/LOCODE) (can be null)
- * @property iso the ISO 3166-1 alpha-2 code of a country (can be null)
+ * @property isoA2 the ISO 3166-1 alpha-2 code of a country (can be null)
  * @property subType the sub-type (can be null)
  * @property name the name
  * @property translations a map of name translations associated by language ISO code (can be null)
@@ -33,7 +33,7 @@ import java.io.Serializable
 data class Location(
   val id: String,
   val unlocode: String? = null,
-  val iso: String? = null,
+  val isoA2: String? = null,
   val subType: String? = null,
   val name: String,
   val translations: Map<LanguageISOCode, String>? = null,
