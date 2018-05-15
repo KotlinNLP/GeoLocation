@@ -24,14 +24,14 @@ import com.kotlinnlp.geolocation.structures.Statistics
  *  - [stats], that contains the global statistics of score and confidence of the best locations
  *
  * @param dictionary a dictionary containing all the locations that can be recognized
- * @param text the input text
- * @param candidateEntities a set of entities found in the [text], candidate as locations
+ * @param textTokens the list of tokens forms that compose the input text
+ * @param candidateEntities a set of entities found among the [textTokens], candidate as locations
  * @param coordinateEntitiesGroups a list of groups of entities that are coordinate in the text
  * @param ambiguityGroups a list of ambiguity groups
  */
 class LocationsFinder(
   private val dictionary: LocationsDictionary,
-  private val text: String,
+  private val textTokens: List<String>,
   candidateEntities: Set<CandidateEntity>,
   coordinateEntitiesGroups: List<Set<String>>,
   ambiguityGroups: List<List<String>>
@@ -99,6 +99,7 @@ class LocationsFinder(
    * @return a map of extended locations associated by id
    */
   private fun buildCandidateLocationsById(candidateEntities: Set<CandidateEntity>): Map<String, ExtendedLocation> {
+
     val entitiesNamesByLocId = mutableMapOf<String, MutableSet<CandidateEntity>>()
 
     val candidateLocations: List<Location> = candidateEntities.flatMap { entity ->
@@ -180,9 +181,25 @@ class LocationsFinder(
    *
    * @return a set of entities lower names found in the input text
    */
-  private fun searchInText(entitiesNames: Set<String>): Set<String> = entitiesNames.filter {
-    this.text.toLowerCase().findAnyOf(listOf(it)) != null
-  }.toSet()
+  private fun searchInText(entitiesNames: Set<String>): Set<String> {
+
+    val hashTokens: List<Int> = this.textTokens.map { it.toLowerCase().hashCode() }
+
+    return entitiesNames
+      .filter { hashTokens.containsSubList(it.split(" ").map { it.hashCode() }) }
+      .toSet()
+  }
+
+  /**
+   * Search a given sub-list into this one and returns whether it has been found.
+   *
+   * @param elmSubList the sub-list to search
+   *
+   * @return whether this list contains the given sub-list
+   */
+  private fun <T>List<T>.containsSubList(elmSubList: List<T>): Boolean =
+    elmSubList.size <= this.size &&
+      (0 until (this.size - elmSubList.size)).find { this.subList(it, it + elmSubList.size) == elmSubList } != null
 
   /**
    * Set the candidate locations scores.
