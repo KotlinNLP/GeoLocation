@@ -7,6 +7,9 @@
 
 package com.kotlinnlp.geolocation.structures
 
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.json
+
 /**
  * A structure that extends a location with adding properties, such as [score], [confidence] and [entities].
  *
@@ -92,6 +95,11 @@ data class ExtendedLocation(
   }
 
   /**
+   * @return the JSON object that represents this extended location
+   */
+  fun toJSON(): JsonObject = JsonObject(this.location.toJSON() + mapOf("stats" to this.statsToJSON()))
+
+  /**
    * @return a string representation of this class
    */
   override fun toString(): String =
@@ -170,8 +178,6 @@ data class ExtendedLocation(
     if (thisLoc.id == otherLoc.id) return false
     if (!thisLoc.isInsideCountry || !otherLoc.isInsideCountry) return false
 
-
-
     return true
   }
 
@@ -232,5 +238,21 @@ data class ExtendedLocation(
       otherPop == null -> 1
       else -> thisPop.compareTo(otherPop)
     }
+  }
+
+  /**
+   * @return the JSON object with the stats of this location
+   */
+  private fun statsToJSON(): JsonObject = json {
+    obj(
+      "score" to obj(
+        "value" to this@ExtendedLocation.score,
+        "deviation" to this@ExtendedLocation.scoreDeviation
+      ),
+      "confidence" to obj(
+        "value" to this@ExtendedLocation.confidence,
+        "deviation" to this@ExtendedLocation.confidenceDeviation
+      )
+    )
   }
 }
