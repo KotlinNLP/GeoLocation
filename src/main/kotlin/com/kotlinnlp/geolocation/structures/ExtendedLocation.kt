@@ -252,7 +252,8 @@ data class ExtendedLocation(
       "confidence" to obj(
         "value" to this@ExtendedLocation.confidence,
         "deviation" to this@ExtendedLocation.confidenceDeviation
-      )
+      ),
+      "countryStrength" to this@ExtendedLocation.countryStrength
     )
   }
 }
