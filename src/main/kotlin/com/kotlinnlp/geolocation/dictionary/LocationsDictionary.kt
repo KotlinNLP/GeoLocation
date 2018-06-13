@@ -9,10 +9,10 @@ package com.kotlinnlp.geolocation.dictionary
 
 import com.kotlinnlp.geolocation.structures.Location
 import com.kotlinnlp.geolocation.exceptions.LocationNotFound
-import com.kotlinnlp.progressindicator.ProgressIndicatorBar
 import com.kotlinnlp.utils.Serializer
 import com.kotlinnlp.utils.forEachLine
 import com.kotlinnlp.utils.getLinesCount
+import com.kotlinnlp.utils.progressindicator.ProgressIndicatorBar
 import java.io.InputStream
 import java.io.OutputStream
 import java.io.Serializable
