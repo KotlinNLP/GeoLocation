@@ -60,9 +60,8 @@
         <surfire.version>2.19.1</surfire.version>
         <dokka.version>0.9.16</dokka.version>
         <klaxon.version>2.1.14</klaxon.version>
-        <utils.version>1.1.0</utils.version>
+        <utils.version>2.1.0</utils.version>
         <neuraltokenizer.version>0.1.0</neuraltokenizer.version>
-        <progressindicator.version>1.0.0</progressindicator.version>
     </properties>
 
     <repositories>
@@ -241,12 +240,6 @@
             <groupId>com.kotlinnlp</groupId>
             <artifactId>neuraltokenizer</artifactId>
             <version>${neuraltokenizer.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.kotlinnlp</groupId>
-            <artifactId>progressindicator</artifactId>
-            <version>${progressindicator.version}</version>
         </dependency>
     </dependencies>
 
