@@ -61,7 +61,6 @@
         <dokka.version>0.9.16</dokka.version>
         <klaxon.version>3.0.5</klaxon.version>
         <utils.version>2.1.0</utils.version>
-        <neuraltokenizer.version>0.2.1</neuraltokenizer.version>
     </properties>
 
     <repositories>
@@ -98,12 +97,6 @@
                         <goals>
                             <goal>compile</goal>
                         </goals>
-                        <configuration>
-                            <sourceDirs>
-                                <source>examples</source>
-                                <source>src/main/kotlin</source>
-                            </sourceDirs>
-                        </configuration>
                     </execution>
                     <execution>
                         <id>test-compile</id>
@@ -239,12 +232,6 @@
             <groupId>com.kotlinnlp</groupId>
             <artifactId>utils</artifactId>
             <version>${utils.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.kotlinnlp</groupId>
-            <artifactId>neuraltokenizer</artifactId>
-            <version>${neuraltokenizer.version}</version>
         </dependency>
     </dependencies>
 
