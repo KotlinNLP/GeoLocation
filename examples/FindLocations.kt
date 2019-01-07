@@ -92,7 +92,7 @@ private fun findLocations(dictionary: LocationsDictionary, tokenizer: NeuralToke
 
   val finder = LocationsFinder(
     dictionary = dictionary,
-    textTokens = tokenizer.tokenize(text).flatMap { it.tokens.map { it.form } },
+    textTokens = tokenizer.tokenize(text).flatMap { sentence -> sentence.tokens.map { it.form } },
     candidateEntities = setOf(
       CandidateEntity(name = "Los Angeles", score = 0.4),
       CandidateEntity(name = "New York", score = 0.6),
