@@ -69,7 +69,7 @@ class LocationsFinder(
    */
   init {
 
-    // Attention: the order of the following operations is very important!
+    // Attention: the order of the following operations should be not modified!
 
     this.candidateLocationsById = this.buildCandidateLocationsById(candidateEntities).toMutableMap()
 
