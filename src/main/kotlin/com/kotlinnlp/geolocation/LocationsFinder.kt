@@ -74,7 +74,7 @@ class LocationsFinder(
     this.candidateLocationsById = this.buildCandidateLocationsById(candidateEntities).toMutableMap()
 
     AmbiguitiesHelper(this.candidateLocationsById).solveAmbiguities(
-      ambiguityGroups = ambiguityGroups.map { it.map { normalizeEntityName(it) } })
+      ambiguityGroups = ambiguityGroups.map { group -> group.map { normalizeEntityName(it) } })
 
     this.addingEntities = this.buildAddingEntities()
 
@@ -166,7 +166,7 @@ class LocationsFinder(
 
     // A set of parent location ids that are not in the candidateLocationsById.
     val addingLocationIds: Set<String> =
-      this.candidateLocationsById.let { it.values.flatMap { it.location.parentsIds }.subtract(it.keys) }
+      this.candidateLocationsById.let { it.values.flatMap { cand -> cand.location.parentsIds }.subtract(it.keys) }
 
     // A set of adding entities that could be mentioned in the text.
     val addingEntities: Set<String> = addingLocationIds.flatMap { id -> this.dictionary.getValue(id).labels }.toSet()
@@ -186,7 +186,7 @@ class LocationsFinder(
     val hashTokens: List<Int> = this.textTokens.map { it.toLowerCase().hashCode() }
 
     return entitiesNames
-      .filter { hashTokens.containsSubList(it.split(" ").map { it.hashCode() }) }
+      .filter { name -> hashTokens.containsSubList(name.split(" ").map { it.hashCode() }) }
       .toSet()
   }
 
@@ -252,7 +252,7 @@ class LocationsFinder(
     this.normalizeScores(bestLocations)
 
     return bestLocations.sortedWith(
-      Comparator({ locA, locB -> if (locA.isMoreProbableThan(locB)) -1 else 1 }) // descending order
+      Comparator { locA, locB -> if (locA.isMoreProbableThan(locB)) -1 else 1 } // descending order
     )
   }
 
@@ -320,14 +320,14 @@ class LocationsFinder(
   private fun setCountriesStrength() {
 
     val locationsWithCountry: List<ExtendedLocation> =
-      this.bestLocations.filter { it.location.let { it.isInsideCountry || it.isCountry } }
+      this.bestLocations.filter { it.location.let { loc -> loc.isInsideCountry || loc.isCountry } }
 
     val countryIdsToStrength: Map<String, Double> = locationsWithCountry
-      .groupBy { it.location.let { it.countryId ?: it.id } }.entries
-      .associateTo(mutableMapOf()) { it.key to it.value.map { it.score }.average() }
+      .groupBy { ext -> ext.location.let { loc -> loc.countryId ?: loc.id } }.entries
+      .associateTo(mutableMapOf()) { it.key to it.value.map { ext -> ext.score }.average() }
 
     locationsWithCountry.forEach {
-      it.countryStrength = countryIdsToStrength.getValue(it.location.let { it.countryId ?: it.id })
+      it.countryStrength = countryIdsToStrength.getValue(it.location.let { loc -> loc.countryId ?: loc.id })
     }
   }
 }
