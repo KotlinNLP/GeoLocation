@@ -7,13 +7,13 @@
 
     <groupId>com.kotlinnlp</groupId>
     <artifactId>geolocation-examples</artifactId>
-    <version>0.2.0</version>
+    <version>0.1.0</version>
     <packaging>jar</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.version>1.3.10</kotlin.version>
-        <geolocation.version>0.2.0</geolocation.version>
+        <geolocation.version>0.2.1</geolocation.version>
         <neuraltokenizer.version>0.4.3</neuraltokenizer.version>
         <utils.version>2.1.1</utils.version>
     </properties>
