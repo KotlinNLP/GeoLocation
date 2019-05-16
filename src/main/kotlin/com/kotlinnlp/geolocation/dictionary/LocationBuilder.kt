@@ -48,9 +48,9 @@ internal object LocationBuilder {
    *
    * @return a new location
    */
-  fun buildLocation(properties: String): Location = decodeProperties(properties).let {
+  fun buildLocation(properties: String): Location = decodeProperties(properties).let { propList ->
 
-    val iter: Iterator<*> = it.iterator()
+    val iter: Iterator<*> = propList.iterator()
 
     @Suppress("UNCHECKED_CAST")
     Location(
@@ -114,7 +114,7 @@ internal object LocationBuilder {
   private fun buildCoordinates(lat: Double?, lon: Double?): Location.Coordinates? =
     lat?.let {
       require(lon != null) { "Invalid format: if 'lat' is not null also 'lon' must be not null." }
-      Location.Coordinates(lat = it, lon = lon!!)
+      Location.Coordinates(lat = it, lon = lon)
     }
 
   /**
