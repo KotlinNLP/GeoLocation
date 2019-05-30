@@ -6,11 +6,8 @@
  * ------------------------------------------------------------------*/
 
 import com.kotlinnlp.geolocation.structures.Location
-import org.jetbrains.spek.api.Spek
-import org.jetbrains.spek.api.dsl.context
-import org.jetbrains.spek.api.dsl.describe
-import org.jetbrains.spek.api.dsl.it
-import org.jetbrains.spek.api.dsl.on
+import org.spekframework.spek2.Spek
+import org.spekframework.spek2.style.specification.describe
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
@@ -27,14 +24,14 @@ class LocationSpec : Spek({
 
       val location = Location(id = "51180C026000A", name = "Washington")
 
-      on("type property") {
+      context("type property") {
 
         it("should have type City") {
           assertEquals(Location.Type.City, location.type)
         }
       }
 
-      on("parents ids properties") {
+      context("parents ids properties") {
 
         it("should have the expected adminArea1Id property") {
           assertEquals("51180C0260000", location.adminArea1Id)
@@ -57,7 +54,7 @@ class LocationSpec : Spek({
         }
       }
 
-      on("boolean hierarchy properties") {
+      context("boolean hierarchy properties") {
 
         it("should have isInsideAdminArea1 true") {
           assertTrue { location.isInsideAdminArea1 }
@@ -85,14 +82,14 @@ class LocationSpec : Spek({
 
       val location = Location(id = "1308020000001", name = "Shoreditch")
 
-      on("type property") {
+      context("type property") {
 
         it("should have type City") {
           assertEquals(Location.Type.City, location.type)
         }
       }
 
-      on("parents ids properties") {
+      context("parents ids properties") {
 
         it("should have a null adminArea1Id property") {
           assertNull(location.adminArea1Id)
@@ -115,7 +112,7 @@ class LocationSpec : Spek({
         }
       }
 
-      on("boolean hierarchy properties") {
+      context("boolean hierarchy properties") {
 
         it("should have isInsideAdminArea1 false") {
           assertFalse { location.isInsideAdminArea1 }
@@ -143,14 +140,14 @@ class LocationSpec : Spek({
 
       val location = Location(id = "2222000010000", name = "São Tomé")
 
-      on("type property") {
+      context("type property") {
 
         it("should have type AdminArea1") {
           assertEquals(Location.Type.AdminArea1, location.type)
         }
       }
 
-      on("parents ids properties") {
+      context("parents ids properties") {
 
         it("should have a null adminArea1Id property") {
           assertNull(location.adminArea1Id)
@@ -173,7 +170,7 @@ class LocationSpec : Spek({
         }
       }
 
-      on("boolean hierarchy properties") {
+      context("boolean hierarchy properties") {
 
         it("should have isInsideAdminArea1 false") {
           assertFalse { location.isInsideAdminArea1 }
@@ -201,14 +198,14 @@ class LocationSpec : Spek({
 
       val location = Location(id = "5118010000000", name = "West Virginia")
 
-      on("type property") {
+      context("type property") {
 
         it("should have type AdminArea2") {
           assertEquals(Location.Type.AdminArea2, location.type)
         }
       }
 
-      on("parents ids properties") {
+      context("parents ids properties") {
 
         it("should have a null adminArea1Id property") {
           assertNull(location.adminArea1Id)
@@ -231,7 +228,7 @@ class LocationSpec : Spek({
         }
       }
 
-      on("boolean hierarchy properties") {
+      context("boolean hierarchy properties") {
 
         it("should have isInsideAdminArea1 false") {
           assertFalse { location.isInsideAdminArea1 }
@@ -259,14 +256,14 @@ class LocationSpec : Spek({
 
       val location = Location(id = "2201000000000", name = "Burkina Faso")
 
-      on("type property") {
+      context("type property") {
 
         it("should have type Country") {
           assertEquals(Location.Type.Country, location.type)
         }
       }
 
-      on("parents ids properties") {
+      context("parents ids properties") {
 
         it("should have a null adminArea1Id property") {
           assertNull(location.adminArea1Id)
@@ -289,7 +286,7 @@ class LocationSpec : Spek({
         }
       }
 
-      on("boolean hierarchy properties") {
+      context("boolean hierarchy properties") {
 
         it("should have isInsideAdminArea1 false") {
           assertFalse { location.isInsideAdminArea1 }
@@ -317,14 +314,14 @@ class LocationSpec : Spek({
 
       val location = Location(id = "0100000000000", name = "Americas")
 
-      on("type property") {
+      context("type property") {
 
         it("should have type Region") {
           assertEquals(Location.Type.Region, location.type)
         }
       }
 
-      on("parents ids properties") {
+      context("parents ids properties") {
 
         it("should have a null adminArea1Id property") {
           assertNull(location.adminArea1Id)
@@ -347,7 +344,7 @@ class LocationSpec : Spek({
         }
       }
 
-      on("boolean hierarchy properties") {
+      context("boolean hierarchy properties") {
 
         it("should have isInsideAdminArea1 false") {
           assertFalse { location.isInsideAdminArea1 }
@@ -375,14 +372,14 @@ class LocationSpec : Spek({
 
       val location = Location(id = "1000000000000", name = "Europe")
 
-      on("type property") {
+      context("type property") {
 
         it("should have type Continent") {
           assertEquals(Location.Type.Continent, location.type)
         }
       }
 
-      on("parents ids properties") {
+      context("parents ids properties") {
 
         it("should have a null adminArea1Id property") {
           assertNull(location.adminArea1Id)
@@ -405,7 +402,7 @@ class LocationSpec : Spek({
         }
       }
 
-      on("boolean hierarchy properties") {
+      context("boolean hierarchy properties") {
 
         it("should have isInsideAdminArea1 false") {
           assertFalse { location.isInsideAdminArea1 }
