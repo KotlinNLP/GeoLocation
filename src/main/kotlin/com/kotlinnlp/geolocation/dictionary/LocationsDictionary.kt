@@ -119,6 +119,7 @@ class LocationsDictionary(filename: String, verbose: Boolean = true) : Serializa
         val location: Location = LocationBuilder.buildLocation(jsonLocation)
 
         this.encodedLocationsById[location.id] = location
+        this.encodedLocationsByLabel.getOrPut(location.name.toLowerCase()) { mutableSetOf() }.add(location)
 
         location.labels.forEach {
           this.encodedLocationsByLabel.getOrPut(it.toLowerCase()) { mutableSetOf() }.add(location)
