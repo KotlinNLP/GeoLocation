@@ -121,6 +121,10 @@ class LocationsDictionary(filename: String, verbose: Boolean = true) : Serializa
         this.encodedLocationsById[location.id] = location
         this.encodedLocationsByLabel.getOrPut(location.name.toLowerCase()) { mutableSetOf() }.add(location)
 
+        LangUtils.forEachDeclination(location.name) {
+          this.encodedLocationsByLabel.getOrPut(it.toLowerCase()) { mutableSetOf() }.add(location)
+        }
+
         location.labels.forEach {
           this.encodedLocationsByLabel.getOrPut(it.toLowerCase()) { mutableSetOf() }.add(location)
         }
