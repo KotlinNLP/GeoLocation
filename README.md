@@ -1,4 +1,4 @@
-# GeoLocation [![GitHub version](https://badge.fury.io/gh/KotlinNLP%2FGeoLocation.svg)](https://badge.fury.io/gh/KotlinNLP%2FGeoLocation) [![Build Status](https://travis-ci.org/KotlinNLP/GeoLocation.svg?branch=master)](https://travis-ci.org/KotlinNLP/GeoLocation)
+# GeoLocation [![Maven Central](https://img.shields.io/maven-central/v/com.kotlinnlp/geolocation.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.kotlinnlp%22%20AND%20a:%22geolocation%22) [![Build Status](https://travis-ci.org/KotlinNLP/GeoLocation.svg?branch=master)](https://travis-ci.org/KotlinNLP/GeoLocation)
 
 GeoLocation is a Kotlin library designed to support the identification of geo-locations in a text.
 
