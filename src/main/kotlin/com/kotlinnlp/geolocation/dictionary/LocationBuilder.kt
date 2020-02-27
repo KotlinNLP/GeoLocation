@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.geolocation.dictionary
 
-import com.beust.klaxon.Parser
+import com.beust.klaxon.Klaxon
 import com.kotlinnlp.geolocation.structures.LanguageISOCode
 import com.kotlinnlp.geolocation.structures.Location
 
@@ -24,7 +24,7 @@ internal object LocationBuilder {
   /**
    * A JSON parser.
    */
-  private val jsonParser = Parser()
+  private val jsonParser = Klaxon()
 
   /**
    * A set of valid language ISO codes (upper case).
@@ -79,7 +79,7 @@ internal object LocationBuilder {
    *
    * @return a list of location properties
    */
-  fun decodeProperties(jsonLocation: String): List<*> = jsonParser.parse(StringBuilder(jsonLocation)) as List<*>
+  fun decodeProperties(jsonLocation: String): List<*> = jsonParser.parseJsonArray(jsonLocation.reader())
 
   /**
    * Build the name translations of a location.
