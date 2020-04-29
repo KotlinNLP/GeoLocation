@@ -279,20 +279,13 @@ data class Location(
    */
   private fun buildLabels(): Set<String> {
 
-    val labels: MutableSet<String> = mutableSetOf(this.name.toLowerString())
+    val labels: MutableSet<String> = mutableSetOf(this.name.toLowerCase())
 
-    this.translations?.values?.forEach { labels.add(it.toLowerString()) }
-    this.otherNames?.forEach { labels.add(it.toLowerString()) }
+    this.translations?.values?.forEach { labels.add(it.toLowerCase()) }
+    this.otherNames?.forEach { labels.add(it.toLowerCase()) }
 
     return labels
   }
-
-  /**
-   * Cast any object into a [String] converting it to lower case.
-   *
-   * @return a string
-   */
-  private fun Any.toLowerString(): String = (this as String).toLowerCase()
 
   /**
    * Check if all the digits of the [id] in the given [range] are zeros.
