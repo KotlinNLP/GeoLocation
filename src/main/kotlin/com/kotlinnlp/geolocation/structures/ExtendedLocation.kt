@@ -9,6 +9,7 @@ package com.kotlinnlp.geolocation.structures
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.json
+import com.kotlinnlp.geolocation.dictionary.LocationsDictionary
 
 /**
  * A structure that extends a location with adding properties, such as [score], [confidence] and [entities].
@@ -95,9 +96,12 @@ data class ExtendedLocation(
   }
 
   /**
+   * @param dictionary a location dictionary to extend parents info (optional)
+   *
    * @return the JSON object that represents this extended location
    */
-  fun toJSON(): JsonObject = JsonObject(this.location.toJSON() + mapOf("stats" to this.statsToJSON()))
+  fun toJSON(dictionary: LocationsDictionary? = null): JsonObject =
+    JsonObject(this.location.toJSON(dictionary) + mapOf("stats" to this.statsToJSON()))
 
   /**
    * @return a string representation of this class
