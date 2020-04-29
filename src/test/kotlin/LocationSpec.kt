@@ -22,7 +22,7 @@ class LocationSpec : Spek({
 
     context("a city with a complete hierarchy") {
 
-      val location = Location(id = "51180C026000A", name = "Washington")
+      val location = buildLocation(id = "51180C026000A", name = "Washington")
 
       context("type property") {
 
@@ -80,7 +80,7 @@ class LocationSpec : Spek({
 
     context("a city with an incomplete hierarchy") {
 
-      val location = Location(id = "1308020000001", name = "Shoreditch")
+      val location = buildLocation(id = "1308020000001", name = "Shoreditch")
 
       context("type property") {
 
@@ -138,7 +138,7 @@ class LocationSpec : Spek({
 
     context("an admin area 1") {
 
-      val location = Location(id = "2222000010000", name = "São Tomé")
+      val location = buildLocation(id = "2222000010000", name = "São Tomé")
 
       context("type property") {
 
@@ -196,7 +196,7 @@ class LocationSpec : Spek({
 
     context("an admin area 2") {
 
-      val location = Location(id = "5118010000000", name = "West Virginia")
+      val location = buildLocation(id = "5118010000000", name = "West Virginia")
 
       context("type property") {
 
@@ -254,7 +254,7 @@ class LocationSpec : Spek({
 
     context("a country") {
 
-      val location = Location(id = "2201000000000", name = "Burkina Faso")
+      val location = buildLocation(id = "2201000000000", name = "Burkina Faso")
 
       context("type property") {
 
@@ -312,7 +312,7 @@ class LocationSpec : Spek({
 
     context("a region") {
 
-      val location = Location(id = "0100000000000", name = "Americas")
+      val location = buildLocation(id = "0100000000000", name = "Americas")
 
       context("type property") {
 
@@ -370,7 +370,7 @@ class LocationSpec : Spek({
 
     context("a continent") {
 
-      val location = Location(id = "1000000000000", name = "Europe")
+      val location = buildLocation(id = "1000000000000", name = "Europe")
 
       context("type property") {
 
