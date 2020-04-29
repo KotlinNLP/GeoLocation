@@ -59,16 +59,16 @@ internal object LocationBuilder {
       isoA2 = iter.next() as? String,
       subType = iter.next() as? String,
       name = iter.next() as String,
-      translations = iter.next()?.let { buildTranslations(it as Map<String, String>) },
-      otherNames = iter.next()?.toStringList(),
+      translations = iter.next()?.let { buildTranslations(it as Map<String, String>) } ?: mapOf(),
+      otherNames = iter.next()?.toStringList() ?: listOf(),
       demonym = iter.next() as? String,
       coords = buildCoordinates(lat = iter.next() as? Double, lon = iter.next() as? Double),
-      borders = iter.next()?.toStringList(),
-      isCapital = iter.next() as? Boolean,
+      borders = iter.next()?.toStringList() ?: listOf(),
+      isCapital = iter.next() as? Boolean ?: false,
       area = iter.next() as? Int,
       population = iter.next() as? Int,
-      languages = iter.next()?.toStringList(),
-      altDivisions = iter.next()?.let { buildAltDivisions(it as List<*>) }
+      languages = iter.next()?.toStringList() ?: listOf(),
+      altDivisions = iter.next()?.let { buildAltDivisions(it as List<*>) } ?: listOf()
     )
   }
 

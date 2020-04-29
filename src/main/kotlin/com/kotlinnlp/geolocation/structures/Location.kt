@@ -20,33 +20,33 @@ import java.io.Serializable
  * @property isoA2 the ISO 3166-1 alpha-2 code of a country (can be null)
  * @property subType the sub-type (can be null)
  * @property name the name
- * @property translations a map of name translations associated by language ISO code (can be null)
- * @property otherNames a list of other possible names (can be null)
+ * @property translations a map of name translations associated by language ISO code
+ * @property otherNames a list of other possible names
  * @property demonym the demonym (can be null)
  * @property coords the coordinates (can be null)
- * @property borders a list of border countries (can be null)
- * @property isCapital a boolean indicating if a city is the capital of its country (can be null)
+ * @property borders a list of border countries
+ * @property isCapital whether this location is the capital city of its country
  * @property area the area in km^2 (can be null)
  * @property population the population (can be null)
- * @property languages a list of spoken languages (can be null)
- * @property altDivisions a list of alternative divisions (can be null)
+ * @property languages a list of spoken languages
+ * @property altDivisions a list of alternative divisions
  */
 data class Location(
   val id: String,
-  val unlocode: String? = null,
-  val isoA2: String? = null,
-  val subType: String? = null,
+  val unlocode: String?,
+  val isoA2: String?,
+  val subType: String?,
   val name: String,
-  val translations: Map<LanguageISOCode, String>? = null,
-  val otherNames: List<String>? = null,
-  val demonym: String? = null,
-  val coords: Coordinates? = null,
-  val borders: List<String>? = null,
-  val isCapital: Boolean? = null,
-  val area: Int? = null,
-  val population: Int? = null,
-  val languages: List<String>? = null,
-  val altDivisions: List<AlternativeDivision>? = null
+  val translations: Map<LanguageISOCode, String>,
+  val otherNames: List<String>,
+  val demonym: String?,
+  val coords: Coordinates?,
+  val borders: List<String>,
+  val isCapital: Boolean,
+  val area: Int?,
+  val population: Int?,
+  val languages: List<String>,
+  val altDivisions: List<AlternativeDivision>
 ) : Serializable {
 
   companion object {
@@ -240,14 +240,14 @@ data class Location(
       "subType" to this@Location.subType,
       "name" to this@Location.name,
       "labels" to array(this@Location.labels.toList()),
-      "translations" to this@Location.translations?.mapKeys { it.key.annotation }?.let { JsonObject(it) },
+      "translations" to JsonObject(this@Location.translations.mapKeys { it.key.annotation }),
       "isCapital" to this@Location.isCapital,
       "demonym" to this@Location.demonym,
       "area" to this@Location.area,
       "population" to this@Location.population,
-      "languages" to this@Location.languages?.let { array(it) },
-      "borders" to this@Location.borders?.let { array(it) },
-      "altDivisions" to this@Location.altDivisions?.let { divs -> array(divs.map { it.toJSON() }) },
+      "languages" to array(this@Location.languages),
+      "borders" to array(this@Location.borders),
+      "altDivisions" to array(this@Location.altDivisions.map { it.toJSON() }),
       "coords" to obj(
         "lat" to this@Location.coords?.lat,
         "lon" to this@Location.coords?.lon
@@ -293,8 +293,8 @@ data class Location(
 
     val labels: MutableSet<String> = mutableSetOf(this.name.toLowerCase())
 
-    this.translations?.values?.forEach { labels.add(it.toLowerCase()) }
-    this.otherNames?.forEach { labels.add(it.toLowerCase()) }
+    this.translations.values.forEach { labels.add(it.toLowerCase()) }
+    this.otherNames.forEach { labels.add(it.toLowerCase()) }
 
     return labels
   }

@@ -157,7 +157,7 @@ internal class ConfidenceHelper(private val bestLocations: List<ExtendedLocation
       if (bestCountriesCount > 1) {
 
         // The border countries of the given location that are best locations
-        val bestBordersCount: Int = location.location.borders?.count { it in this.bestLocationsIds } ?: 0
+        val bestBordersCount: Int = location.location.borders.count { it in this.bestLocationsIds }
 
         // bestCountriesCount - 1 = the count of best countries except the given location itself
         location.confidence += bestBordersCount.toFloat() / (bestCountriesCount - 1)
