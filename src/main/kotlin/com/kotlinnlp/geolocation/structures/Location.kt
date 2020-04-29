@@ -248,10 +248,12 @@ data class Location(
       "languages" to array(this@Location.languages),
       "borders" to array(this@Location.borders),
       "altDivisions" to array(this@Location.altDivisions.map { it.toJSON() }),
-      "coords" to obj(
-        "lat" to this@Location.coords?.lat,
-        "lon" to this@Location.coords?.lon
-      ),
+      "coords" to this@Location.coords?.let {
+        obj(
+          "lat" to it.lat,
+          "lon" to it.lon
+        )
+      },
       "parents" to obj(
         "adminArea1" to this@Location.adminArea1Id?.let { buildParent(parentId = it, dictionary = dictionary) },
         "adminArea2" to this@Location.adminArea2Id?.let { buildParent(parentId = it, dictionary = dictionary) },
