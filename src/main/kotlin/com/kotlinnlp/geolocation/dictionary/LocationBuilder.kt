@@ -27,9 +27,9 @@ internal object LocationBuilder {
   private val jsonParser = Klaxon()
 
   /**
-   * A set of valid language ISO codes (upper case).
+   * A set of valid language ISO codes (lower case).
    */
-  private val validLanguageISOCodes: Set<String> = LanguageISOCode.values().map { it.toString().toUpperCase() }.toSet()
+  private val validLanguageISOCodes: Set<String> = LanguageISOCode.values().map { it.toString().toLowerCase() }.toSet()
 
   /**
    * Whether a location is valid to be built: ensure that the sub-type is valid and the name is not null.
@@ -90,14 +90,14 @@ internal object LocationBuilder {
    */
   private fun buildTranslations(translations: Map<String, String>): Map<LanguageISOCode, String>? {
 
-    val translationsUpper: Map<String, String> = translations.mapKeys { it.key.toUpperCase() }
-    val validLangCodes: Set<String> = translationsUpper.keys.intersect(this.validLanguageISOCodes)
+    val translationsLower: Map<String, String> = translations.mapKeys { it.key.toLowerCase() }
+    val validLangCodes: Set<String> = translationsLower.keys.intersect(this.validLanguageISOCodes)
 
     val validTranslations: Map<LanguageISOCode, String> = validLangCodes.associate {
-      LanguageISOCode.valueOf(it) to translationsUpper.getValue(it)
+      LanguageISOCode.valueOf(it.toUpperCase()) to translationsLower.getValue(it)
     }
 
-    translationsUpper.keys.subtract(validLangCodes).forEach { println("[WARNING] Invalid language ISO code: $it") }
+    translationsLower.keys.subtract(validLangCodes).forEach { println("[WARNING] Invalid language ISO code: $it") }
 
     return if (validTranslations.isNotEmpty()) validTranslations else null
   }
