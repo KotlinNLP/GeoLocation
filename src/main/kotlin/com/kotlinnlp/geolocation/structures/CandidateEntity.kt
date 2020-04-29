@@ -14,9 +14,8 @@ import com.kotlinnlp.geolocation.normalizeEntityName
  *
  * @property name the name of the entity
  * @property score the semantic score (as confidence that the candidate could be a location)
- * @property occurrences the list of occurrences of the candidate as ranges of tokens indices
  */
-data class CandidateEntity(val name: String, val score: Double, val occurrences: List<IntRange> = listOf()) {
+data class CandidateEntity(val name: String, val score: Double) {
 
   /**
    * The normalized [name].
