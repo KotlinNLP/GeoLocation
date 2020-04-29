@@ -96,11 +96,11 @@ data class ExtendedLocation(
   }
 
   /**
-   * @param dictionary a location dictionary to extend parents info (optional)
+   * @param dictionary a location dictionary to extract parents info
    *
    * @return the JSON object that represents this extended location
    */
-  fun toJSON(dictionary: LocationsDictionary? = null): JsonObject =
+  fun toJSON(dictionary: LocationsDictionary): JsonObject =
     JsonObject(this.location.toJSON(dictionary) + mapOf("stats" to this.statsToJSON()))
 
   /**

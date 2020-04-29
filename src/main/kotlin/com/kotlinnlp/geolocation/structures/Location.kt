@@ -227,11 +227,25 @@ data class Location(
   val isInsideAdminArea1: Boolean by lazy { this.type == Type.City && !this.allIdZeros(6 until 9) }
 
   /**
-   * @param dictionary a location dictionary to extend parents info (optional)
+   * @param dictionary a location dictionary to extract the parents info
    *
    * @return the JSON object that represents this location
    */
-  fun toJSON(dictionary: LocationsDictionary? = null): JsonObject = json {
+  fun toJSON(dictionary: LocationsDictionary): JsonObject = this.toBaseJSON().apply {
+    this["parents"] = json {
+      obj(
+        "adminArea1" to this@Location.adminArea1Id?.let { dictionary[it]!!.toBaseJSON() },
+        "adminArea2" to this@Location.adminArea2Id?.let { dictionary[it]!!.toBaseJSON() },
+        "country" to this@Location.countryId?.let { dictionary[it]!!.toBaseJSON() },
+        "continent" to this@Location.continentId?.let { dictionary[it]!!.toBaseJSON() }
+      )
+    }
+  }
+
+  /**
+   * @return the JSON object that represents the this location, excluding the parents info
+   */
+  private fun toBaseJSON(): JsonObject = json {
     obj(
       "id" to this@Location.id,
       "unlocode" to this@Location.unlocode,
@@ -253,24 +267,9 @@ data class Location(
           "lat" to it.lat,
           "lon" to it.lon
         )
-      },
-      "parents" to obj(
-        "adminArea1" to this@Location.adminArea1Id?.let { buildParent(parentId = it, dictionary = dictionary) },
-        "adminArea2" to this@Location.adminArea2Id?.let { buildParent(parentId = it, dictionary = dictionary) },
-        "country" to this@Location.countryId?.let { buildParent(parentId = it, dictionary = dictionary) },
-        "continent" to this@Location.continentId?.let { buildParent(parentId = it, dictionary = dictionary) }
-      )
+      }
     )
   }
-
-  /**
-   * @param parentId a parent ID
-   * @param dictionary the optional dictionary from which to extract the parent info
-   *
-   * @return the JSON object that represents the given parent location
-   */
-  private fun buildParent(parentId: String, dictionary: LocationsDictionary?): JsonObject =
-    dictionary?.let { d -> d[parentId]!!.toJSON() } ?: json { obj("id" to parentId) }
 
   /**
    * Build the type of this location deducing it from the [id].
